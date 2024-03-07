@@ -1,18 +1,36 @@
 #:kivy 1.0.9
+<Player>:
+    size : 150,150
+    canvas:
+        Rectangle:
+            pos: self.pos
+            size: self.size 
+            source: './assets/leaf.png'
+
+<Enemy>:
+    size : 150,150
+    canvas:
+        Rectangle:
+            pos: self.pos
+            size: self.size 
+            source:'./assets/leaf2.png'
+
+
 <GameWidget>:
+    player : player_left
+    enemy : enemy_right 
+
     canvas:
         Rectangle:
             source: './assets/background.jpg'
             pos: self.pos
             size: self.size
-        Rectangle:
-            source: './assets/leaf.png'
-            size: 150, 150
-            pos: self.width / 4 - 20, self.top - 600
+    #กรณีที่มีการอ้างอิงถึงอ็อบเจ็กต์ด้านนอกคลาสปัจจุบัน เช่น <Player> หรือ <Enemy> จะใช้ root เพื่ออ้างอิงถึง GameWidget แทน self 
+    Player:
+        id: player_left
+        pos: root.width / 4 - 20, root.top - 600
+    Enemy:
+        id: enemy_right
+        pos: root.width * 3 / 4 - 20, root.top - 600
 
-        Rectangle:
-            source: './assets/leaf.png'
-            size: 150, 150
-            pos: self.width * 3 / 4 - 20, self.top - 600
-
-
+    
