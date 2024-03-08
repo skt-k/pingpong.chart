@@ -5,16 +5,14 @@
         Rectangle:
             pos: self.pos
             size: self.size 
-            source: './assets/leaf.png'
-
+            source: root.image_source
 <Enemy>:
     size : 150,150
     canvas:
         Rectangle:
             pos: self.pos
             size: self.size 
-            source:'./assets/leaf2.png'
-
+            source: root.image_source
 
 <GameWidget>:
     player : player_left
@@ -29,9 +27,11 @@
     Player:
         id: player_left
         pos: root.width / 4 - 20, root.top - 600
+        
     Enemy:
         id: enemy_right
         pos: root.width * 3 / 4 - 20, root.top - 600
+        
     Label:
         font_size: 70
         center_x: root.width / 4
