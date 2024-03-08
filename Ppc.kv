@@ -1,4 +1,11 @@
 #:kivy 1.0.9
+<AttackPower>:
+    size: 100,100
+    canvas:
+        Rectangle:
+            pos: self.pos
+            size: self.size
+            source : root.image_source
 <Player>:
     size : 150,150
     canvas:
@@ -16,7 +23,9 @@
 
 <GameWidget>:
     player : player_left
+    powerPlayer: power_player_left
     enemy : enemy_right 
+    powerEnemy: power_enemy_right
 
     canvas:
         Rectangle:
@@ -27,9 +36,15 @@
     Player:
         id: player_left
         pos: root.width / 4 - 20, root.top - 600
-        
+    AttackPower:
+        id: power_player_left
+        pos: root.width / 4 - 20, root.top - 600
+    
     Enemy:
         id: enemy_right
+        pos: root.width * 3 / 4 - 20, root.top - 600
+    AttackPower:
+        id: power_enemy_right
         pos: root.width * 3 / 4 - 20, root.top - 600
         
     Label:
