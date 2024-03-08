@@ -32,5 +32,16 @@
     Enemy:
         id: enemy_right
         pos: root.width * 3 / 4 - 20, root.top - 600
+    Label:
+        font_size: 70
+        center_x: root.width / 4
+        top: root.top-50
+        text: str(root.player.energy)
+    Label:
+        font_size: 70
+        center_x: root.width *3/4
+        top: root.top -50
+        text: str(root.enemy.energy)
+
 
     
