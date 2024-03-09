@@ -21,11 +21,16 @@ class Player(Widget):
         self.energy += 1
         self.image_source = './assets/leaf.png'
 
-    def decrease_energy(self):
-        self.energy -= 1
-        self.image_source = './assets/hot.png'
-        # Release attack power go to the Enemy (go to right)
-        self.parent.release_attack_power(self.center_x, self.center_y, 1)
+    def release_power(self, attack_command):# เช็คพลังงานและปล่อยพลัง
+        if self.energy > 0:  
+            if attack_command == 'hadoken' and self.energy >= 1:
+                self.energy -= 1
+                self.image_source = './assets/hot.png'
+                self.parent.release_attack_power(self.center_x, self.center_y, 1,attack_command) #กำหนดตำแหน่งปล่อยพลังจากตำแหน่งที่ตัวละครยืนอยู่
+            if attack_command == 'gun' and self.energy >= 2:
+                self.energy -= 2
+                self.image_source = './assets/hot.png'
+                self.parent.release_attack_power(self.center_x, self.center_y, 1,attack_command) 
 
 class Enemy(Widget):
     energy = NumericProperty(3)
@@ -35,11 +40,16 @@ class Enemy(Widget):
         self.energy += 1
         self.image_source = './assets/leaf2.png'
 
-    def decrease_energy(self):
-        self.energy -= 1
-        self.image_source = './assets/nurse.png'
-        # Release attack power go to the Player (go to left)
-        self.parent.release_attack_power(self.center_x, self.center_y, -1)
+    def release_power(self, attack_command):# เช็คพลังงานและปล่อยพลัง
+        if self.energy > 0:
+            if attack_command == 'hadoken' and self.energy >= 1:
+                self.energy -= 1
+                self.image_source = './assets/nurse.png'
+                self.parent.release_attack_power(self.center_x, self.center_y, -1,attack_command) #กำหนดตำแหน่งปล่อยพลังจากตำแหน่งที่ตัวละครยืนอยู่
+            if attack_command == 'gun' and self.energy >= 2:
+                self.energy -= 2
+                self.image_source = './assets/nurse.png'
+                self.parent.release_attack_power(self.center_x, self.center_y, -1,attack_command) 
 
 class GameWidget(Widget):
     player = ObjectProperty(None)
@@ -59,17 +69,23 @@ class GameWidget(Widget):
         if text == 'j':
             self.player.increase_energy()
             self.enemy.increase_energy()
-        if text == 'k':
-            self.player.decrease_energy()
-            self.enemy.decrease_energy()
+        elif text == 'k':
+            self.player.release_power('hadoken')
+            self.enemy.release_power('hadoken')
+        elif text == 'l':
+            self.player.release_power('gun')
+            self.enemy.release_power('gun')
 
-    def release_attack_power(self, x, y, direction):
+    def release_attack_power(self, x, y, direction, attack_command):
         attack_power = AttackPower()
         attack_power.center = (x, y)
         attack_power.direction = direction
+        if attack_command == 'hadoken':
+            attack_power.image_source = './assets/power.png'
+        elif attack_command == 'gun':
+            attack_power.image_source = './assets/gun.png'
         self.add_widget(attack_power)
         self.attack_powers.append(attack_power)
-        print('attackpw',self.attack_powers)
         Clock.schedule_interval(attack_power.move, 1 / 60)
 
     def remove_attack_power(self, attack_power):
