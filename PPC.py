@@ -6,21 +6,6 @@ from kivy.clock import Clock
 from kivy.uix.image import Image
 
 
-def collides(rect1,rect2):#collide
-        r1x = rect1[0][0]
-        r1y = rect1[0][1]
-        r2x = rect2[0][0]
-        r2y = rect2[0][1]
-        r1w = rect1[1][0]
-        r1h = rect1[1][1]
-        r2w = rect2[1][0]
-        r2h = rect2[1][1]
-
-        if (r1x < r2x + r2w and r1x+r1w>r2x and r1y<r2y+r2h and r1y+r1h>r2y):
-            return True
-        else:
-            return False
-
 class AttackPower(Widget):
     image_source = StringProperty('./assets/power.png')
     velocity = NumericProperty(5)
@@ -28,6 +13,15 @@ class AttackPower(Widget):
 
     def move(self, dt):  # Add dt as an argument
         self.x += self.velocity * self.direction
+        game_widget = self.parent
+        #ตรวจสอบว่าตัวแปร game_widget ถูกกำหนดค่าอย่างถูกต้องหรือไม่ 
+        #และก่อนใช้ attack_powers คุณควรตรวจสอบก่อนว่า game_widget ไม่ใช่ NoneType
+        if game_widget and game_widget.attack_powers:
+            for power in game_widget.attack_powers:
+                if power != self : #ถ้าpower ไม่ใช่ตัวมันเอง
+                    game_widget.check_collision(self, power) #เช็คว่าตัวมันเองชนกับpowerนี้อยู่มั้ย
+                    
+                    
 
 class Player(Widget):
     energy = NumericProperty(3)
@@ -86,11 +80,11 @@ class GameWidget(Widget):
             self.player.increase_energy()
             self.enemy.increase_energy()
         elif text == 'k':
-            self.player.release_power('hadoken')
-            self.enemy.release_power('hadoken')
+            self.player.release_power('hadoken')#ปล่อยพลังงานA
+            self.enemy.release_power('hadoken')#ปล่อยพลังงานB
         elif text == 'l':
-            self.player.release_power('gun')
-            self.enemy.release_power('gun')
+            self.player.release_power('gun')#ปล่อยพลังงานA
+            self.enemy.release_power('gun')#ปล่อยพลังงานB
 
     def release_attack_power(self, x, y, direction, attack_command):
         attack_power = AttackPower()
@@ -113,8 +107,31 @@ class GameWidget(Widget):
     def on_touch_down(self, touch):
         pass
     
-    
+    #ฟังชันตรวจจับการชน
+    def collides(self, obj1, obj2):
+        r1x = obj1.x
+        r1y = obj1.y
+        r2x = obj2.x
+        r2y = obj2.y
+        r1w = obj1.width
+        r1h = obj1.height
+        r2w = obj2.width
+        r2h = obj2.height
 
+        if (r1x < r2x + r2w and r1x+r1w>r2x and r1y<r2y+r2h and r1y+r1h>r2y):
+            return True
+        else:
+            return False
+    
+    
+    def check_collision(self, power_a, power_b):
+        if self.collides(power_a, power_b): #ใช้ฟังชันตรวจสอบการชนกับวัตถุสองอย่าง
+            print("Collision detected between power A and power B")
+            self.remove_attack_power(power_a)
+            self.remove_attack_power(power_b)
+        
+
+    
 class PpcApp(App):
     def build(self):
         game = GameWidget()
