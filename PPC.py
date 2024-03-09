@@ -5,6 +5,22 @@ from kivy.core.window import Window
 from kivy.clock import Clock
 from kivy.uix.image import Image
 
+
+def collides(rect1,rect2):#collide
+        r1x = rect1[0][0]
+        r1y = rect1[0][1]
+        r2x = rect2[0][0]
+        r2y = rect2[0][1]
+        r1w = rect1[1][0]
+        r1h = rect1[1][1]
+        r2w = rect2[1][0]
+        r2h = rect2[1][1]
+
+        if (r1x < r2x + r2w and r1x+r1w>r2x and r1y<r2y+r2h and r1y+r1h>r2y):
+            return True
+        else:
+            return False
+
 class AttackPower(Widget):
     image_source = StringProperty('./assets/power.png')
     velocity = NumericProperty(5)
@@ -87,6 +103,8 @@ class GameWidget(Widget):
         self.add_widget(attack_power)
         self.attack_powers.append(attack_power)
         Clock.schedule_interval(attack_power.move, 1 / 60)
+        
+        
 
     def remove_attack_power(self, attack_power):
         self.remove_widget(attack_power)
@@ -94,6 +112,8 @@ class GameWidget(Widget):
 
     def on_touch_down(self, touch):
         pass
+    
+    
 
 class PpcApp(App):
     def build(self):

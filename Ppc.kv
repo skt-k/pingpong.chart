@@ -34,21 +34,21 @@
     #กรณีที่มีการอ้างอิงถึงอ็อบเจ็กต์ด้านนอกคลาสปัจจุบัน เช่น <Player> หรือ <Enemy> จะใช้ root เพื่ออ้างอิงถึง GameWidget แทน self 
     Player:
         id: player_left
-        pos: root.width / 4 - 20, root.top - 600
+        pos: root.width / 4 - 20, root.top / 6
 
     Enemy:
         id: enemy_right
-        pos: root.width * 3 / 4 - 20, root.top - 600
+        pos: root.width * 3 / 4 - 20, root.top / 6
     
     Label:
         font_size: 70
         center_x: root.width / 4
-        top: root.top-50
+        top: root.top / 2
         text: str(root.player.energy)
     Label:
         font_size: 70
         center_x: root.width *3/4
-        top: root.top -50
+        top: root.top /2
         text: str(root.enemy.energy)
 
 
