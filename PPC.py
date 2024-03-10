@@ -29,7 +29,8 @@ class AttackPower(Widget):
 class Player(Widget):
     energy = NumericProperty(3)
     image_source = StringProperty('./assets/leaf.png')
-
+    lst_power = []
+    
     def increase_energy(self):
         self.energy += 1
         self.image_source = './assets/leaf.png'
@@ -40,15 +41,20 @@ class Player(Widget):
                 self.energy -= 1
                 self.image_source = './assets/hot.png'
                 self.parent.release_attack_power(self.center_x, self.center_y, 1,attack_command) #กำหนดตำแหน่งปล่อยพลังจากตำแหน่งที่ตัวละครยืนอยู่
+                self.lst_power.append('hadoken')
+                print('player release',self.lst_power[-1])
             if attack_command == 'gun' and self.energy >= 2:
                 self.energy -= 2
                 self.image_source = './assets/hot.png'
                 self.parent.release_attack_power(self.center_x, self.center_y, 1,attack_command) 
+                self.lst_power.append('gun')
+                print('player release',self.lst_power[-1])
 
 class Enemy(Widget):
     energy = NumericProperty(3)
     image_source = StringProperty('./assets/leaf2.png')
-
+    
+    
     def increase_energy(self):
         self.energy += 1
         self.image_source = './assets/leaf2.png'
@@ -59,10 +65,12 @@ class Enemy(Widget):
                 self.energy -= 1
                 self.image_source = './assets/nurse.png'
                 self.parent.release_attack_power(self.center_x, self.center_y, -1,attack_command) #กำหนดตำแหน่งปล่อยพลังจากตำแหน่งที่ตัวละครยืนอยู่
+                
             if attack_command == 'gun' and self.energy >= 2:
                 self.energy -= 2
                 self.image_source = './assets/nurse.png'
                 self.parent.release_attack_power(self.center_x, self.center_y, -1,attack_command) 
+                
 
 class GameWidget(Widget):
     player = ObjectProperty(None)
@@ -84,10 +92,11 @@ class GameWidget(Widget):
             self.enemy.increase_energy()
         elif text == 'k':
             self.player.release_power('hadoken')#ปล่อยพลังงานA
-            # self.enemy.release_power('hadoken')#ปล่อยพลังงานB
+            self.enemy.release_power('gun')#ปล่อยพลังงานB
         elif text == 'l':
             self.player.release_power('gun')#ปล่อยพลังงานA
             self.enemy.release_power('gun')#ปล่อยพลังงานB
+            
 
     def release_attack_power(self, x, y, direction, attack_command):
         attack_power = AttackPower()
