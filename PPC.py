@@ -14,12 +14,14 @@ class AttackPower(Widget):
     def move(self, dt):  # Add dt as an argument
         self.x += self.velocity * self.direction
         game_widget = self.parent
-        #ตรวจสอบว่าตัวแปร game_widget ถูกกำหนดค่าอย่างถูกต้องหรือไม่ 
         #และก่อนใช้ attack_powers คุณควรตรวจสอบก่อนว่า game_widget ไม่ใช่ NoneType
         if game_widget and game_widget.attack_powers:
             for power in game_widget.attack_powers:
                 if power != self : #ถ้าpower ไม่ใช่ตัวมันเอง
                     game_widget.check_collision(self, power) #เช็คว่าตัวมันเองชนกับpowerนี้อยู่มั้ย
+                if power.direction == 1: #ถ้าพลังมาจากplayerเช็คการชนกับenemy
+                    game_widget.check_enemy_collision(game_widget.enemy,power)
+                
                     
                     
 
@@ -81,7 +83,7 @@ class GameWidget(Widget):
             self.enemy.increase_energy()
         elif text == 'k':
             self.player.release_power('hadoken')#ปล่อยพลังงานA
-            self.enemy.release_power('hadoken')#ปล่อยพลังงานB
+            # self.enemy.release_power('hadoken')#ปล่อยพลังงานB
         elif text == 'l':
             self.player.release_power('gun')#ปล่อยพลังงานA
             self.enemy.release_power('gun')#ปล่อยพลังงานB
@@ -129,9 +131,17 @@ class GameWidget(Widget):
             print("Collision detected between power A and power B")
             self.remove_attack_power(power_a)
             self.remove_attack_power(power_b)
+            
+            
+    
+
+    def check_enemy_collision(self, enemy, power):
+        if self.collides(enemy, power):
+            print("Enemy collided with power")
+            self.remove_attack_power(power)
+            # ทำอะไรก็ตามที่ต้องการ เช่น ลดพลังงานของศัตรู
         
 
-    
 class PpcApp(App):
     def build(self):
         game = GameWidget()
