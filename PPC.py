@@ -53,7 +53,7 @@ class Player(Widget):
 class Enemy(Widget):
     energy = NumericProperty(3)
     image_source = StringProperty('./assets/leaf2.png')
-    
+    lst_power = []
     
     def increase_energy(self):
         self.energy += 1
@@ -65,12 +65,14 @@ class Enemy(Widget):
                 self.energy -= 1
                 self.image_source = './assets/nurse.png'
                 self.parent.release_attack_power(self.center_x, self.center_y, -1,attack_command) #กำหนดตำแหน่งปล่อยพลังจากตำแหน่งที่ตัวละครยืนอยู่
-                
+                self.lst_power.append('hadoken')
+                print('Enemy release',self.lst_power[-1])
             if attack_command == 'gun' and self.energy >= 2:
                 self.energy -= 2
                 self.image_source = './assets/nurse.png'
                 self.parent.release_attack_power(self.center_x, self.center_y, -1,attack_command) 
-                
+                self.lst_power.append('gun')
+                print('Enemy release',self.lst_power[-1])
 
 class GameWidget(Widget):
     player = ObjectProperty(None)
