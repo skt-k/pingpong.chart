@@ -21,7 +21,8 @@ class AttackPower(Widget):
                     game_widget.check_collision(self, power) #เช็คว่าตัวมันเองชนกับpowerนี้อยู่มั้ย
                 if power.direction == 1: #ถ้าพลังมาจากplayerเช็คการชนกับenemy
                     game_widget.check_enemy_collision(game_widget.enemy,power)
-                
+                if power.direction == -1: #ถ้าพลังมาจากenemyเช็คการชนกับplayer
+                    game_widget.check_player_collision(game_widget.player,power)
                     
                     
 
@@ -133,7 +134,11 @@ class GameWidget(Widget):
             self.remove_attack_power(power_b)
             
             
-    
+    def check_player_collision(self, player, power):
+        if self.collides(player, power):
+            print("Player collided with power")
+            self.remove_attack_power(power)
+            # ทำอะไรก็ตามที่ต้องการ เช่น ลดพลังงานของผู้เล่น
 
     def check_enemy_collision(self, enemy, power):
         if self.collides(enemy, power):
