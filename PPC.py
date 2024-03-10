@@ -18,7 +18,14 @@ class AttackPower(Widget):
         if game_widget and game_widget.attack_powers:
             for power in game_widget.attack_powers:
                 if power != self : #ถ้าpower ไม่ใช่ตัวมันเอง
-                    game_widget.check_collision(self, power) #เช็คว่าตัวมันเองชนกับpowerนี้อยู่มั้ย
+                    player_last_attack = game_widget.player.lst_power[-1]
+                    enemy_last_attack = game_widget.enemy.lst_power[-1]
+                    if player_last_attack == 'hadoken' and enemy_last_attack == 'gun': 
+                        game_widget.check_collision(self, power,'break_power_player') #เช็คว่าตัวมันเองชนกับpowerนี้อยู่มั้ย
+                    elif player_last_attack == 'gun' and enemy_last_attack == 'hadoken': 
+                        game_widget.check_collision(self, power,'break_power_enemy') #เช็คว่าตัวมันเองชนกับpowerนี้อยู่มั้ย
+                    else: 
+                        game_widget.check_collision(self, power,'break_both') #เช็คว่าตัวมันเองชนกับpowerนี้อยู่มั้ย
                 if power.direction == 1: #ถ้าพลังมาจากplayerเช็คการชนกับenemy
                     game_widget.check_enemy_collision(game_widget.enemy,power)
                 if power.direction == -1: #ถ้าพลังมาจากenemyเช็คการชนกับplayer
@@ -97,7 +104,7 @@ class GameWidget(Widget):
             self.enemy.release_power('gun')#ปล่อยพลังงานB
         elif text == 'l':
             self.player.release_power('gun')#ปล่อยพลังงานA
-            self.enemy.release_power('gun')#ปล่อยพลังงานB
+            self.enemy.release_power('hadoken')#ปล่อยพลังงานB
             
 
     def release_attack_power(self, x, y, direction, attack_command):
@@ -138,11 +145,16 @@ class GameWidget(Widget):
             return False
     
     
-    def check_collision(self, power_a, power_b):
+    def check_collision(self, power_a, power_b, command):
         if self.collides(power_a, power_b): #ใช้ฟังชันตรวจสอบการชนกับวัตถุสองอย่าง
             print("Collision detected between power A and power B")
-            self.remove_attack_power(power_a)
-            self.remove_attack_power(power_b)
+            if command == 'break_power_player':
+                self.remove_attack_power(power_a)
+            elif command == 'break_power_enemy':
+                self.remove_attack_power(power_b)
+            elif command == 'break_both':
+                self.remove_attack_power(power_a)
+                self.remove_attack_power(power_b)
             
             
     def check_player_collision(self, player, power):
