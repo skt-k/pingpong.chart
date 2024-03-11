@@ -31,6 +31,11 @@
             source: './assets/background.jpg'
             pos: self.pos
             size: self.size
+    Label:
+        text: root.stage  
+        font_size: 30
+        center: self.parent.center 
+         
     #กรณีที่มีการอ้างอิงถึงอ็อบเจ็กต์ด้านนอกคลาสปัจจุบัน เช่น <Player> หรือ <Enemy> จะใช้ root เพื่ออ้างอิงถึง GameWidget แทน self 
     Player:
         id: player_left
