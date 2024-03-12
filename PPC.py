@@ -36,6 +36,7 @@ class AttackPower(Widget):
             
 class Player(Widget):
     energy = NumericProperty(3)
+    health = NumericProperty(3)
     image_source = StringProperty('./assets/leftplayerprepare.png')
     lst_power = []
     # game_widget = self.parent
@@ -66,6 +67,7 @@ class Player(Widget):
 
 class Enemy(Widget):
     energy = NumericProperty(3)
+    
     image_source = StringProperty('./assets/rightplayerprepare.png')
     lst_power = []
     
@@ -183,6 +185,7 @@ class GameWidget(Widget):
             print("Player collided with power")
             self.remove_attack_power(power)
             self.stage = 'attack_finish' #เปลี่ยนstage
+            self.player.health -= 1
             
 
     def check_enemy_collision(self, enemy, power):
@@ -190,6 +193,7 @@ class GameWidget(Widget):
             print("Enemy collided with power")
             self.remove_attack_power(power)
             self.stage = 'attack_finish' #เปลี่ยนstage
+            
             
         
 
