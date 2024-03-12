@@ -1,4 +1,5 @@
 #:kivy 1.0.9
+
 <AttackPower>:
     size: 100,100
     canvas:
@@ -25,12 +26,16 @@
     player : player_left
     enemy : enemy_right 
     
-
     canvas:
         Rectangle:
             source: './assets/background.jpg'
             pos: self.pos
             size: self.size
+        Rectangle:
+            pos: self.width / 4 - 200, (self.top *3 /4)+20
+            size:100,100
+            
+
     Label:
         text: root.stage  
         font_size: 30
