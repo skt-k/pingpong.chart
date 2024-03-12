@@ -1,9 +1,11 @@
 from kivy.app import App
 from kivy.uix.widget import Widget
-from kivy.properties import NumericProperty, ObjectProperty, StringProperty
+from kivy.properties import NumericProperty, ObjectProperty, StringProperty, ListProperty
 from kivy.core.window import Window
 from kivy.clock import Clock
 from kivy.uix.image import Image
+from kivy.uix.boxlayout import BoxLayout
+import random
 
 
 class AttackPower(Widget):
@@ -18,8 +20,9 @@ class AttackPower(Widget):
         if game_widget and game_widget.attack_powers:
             for power in game_widget.attack_powers:
                 if power != self : #ถ้าpower ไม่ใช่ตัวมันเอง
-                    player_last_attack = game_widget.player.lst_power[-1]
-                    enemy_last_attack = game_widget.enemy.lst_power[-1]
+                    player_last_attack = game_widget.player.last_power
+                    enemy_last_attack = game_widget.enemy.last_power
+                    
                     if player_last_attack == 'hadoken' and enemy_last_attack == 'gun': 
                         game_widget.check_collision(self, power,'break_power_player') #เช็คว่าตัวมันเองชนกับpowerนี้อยู่มั้ย
                     elif player_last_attack == 'gun' and enemy_last_attack == 'hadoken': 
@@ -38,59 +41,71 @@ class Player(Widget):
     energy = NumericProperty(3)
     health = NumericProperty(3)
     image_source = StringProperty('./assets/leftplayerprepare.png')
-    lst_power = []
+    last_power = StringProperty('')
     # game_widget = self.parent
     
     def prepare_attack(self):
         self.image_source = './assets/leftplayerprepare.png'
-    
-    def increase_energy(self):
-        self.energy += 1
-        self.image_source = './assets/leaf.png'
-        self.parent.stage = 'attack_finish' #เปลี่ยนstage
         
 
     def release_power(self, attack_command):# เช็คพลังงานและปล่อยพลัง
-        if self.energy > 0:  
+        if self.energy >= 0:  
+            if attack_command == 'charge':
+                self.energy += 1
+                self.image_source = './assets/leaf.png'
+                self.last_power = 'charge'
+                self.parent.stage = 'attacking' #เปลี่ยนstageเมื่อผู้เล่นปล่อยท่าได้
             if attack_command == 'hadoken' and self.energy >= 1:
                 self.energy -= 1
                 self.image_source = './assets/leftplayerattack.png'
                 self.parent.release_attack_power(self.center_x, self.center_y, 1,attack_command) #กำหนดตำแหน่งปล่อยพลังจากตำแหน่งที่ตัวละครยืนอยู่
-                self.lst_power.append('hadoken')
-                self.parent.stage = 'attacking' #เปลี่ยนstage
+                self.last_power = 'hadoken'
+                self.parent.stage = 'attacking' #เปลี่ยนstageเมื่อผู้เล่นปล่อยท่าได้
             if attack_command == 'gun' and self.energy >= 2:
                 self.energy -= 2
                 self.image_source = './assets/leftplayerattack.png'
                 self.parent.release_attack_power(self.center_x, self.center_y, 1,attack_command) 
-                self.lst_power.append('gun')
-                self.parent.stage = 'attacking'
+                self.last_power = 'gun'
+                self.parent.stage = 'attacking' #เปลี่ยนstageเมื่อผู้เล่นปล่อยท่าได้
 
 class Enemy(Widget):
     energy = NumericProperty(3)
     health = NumericProperty(3)
     image_source = StringProperty('./assets/rightplayerprepare.png')
-    lst_power = []
+    last_power = StringProperty('')
+    
     
     def prepare_attack(self):
         self.image_source = './assets/rightplayerprepare.png'
     
-    def increase_energy(self):
-        self.energy += 1
-        self.image_source = './assets/leaf2.png'
+        
+    def enemy_random_attack(self): #บอทสุ่มท่า
+        if self.energy == 0:
+            random_power = ['charge']
+        elif self.energy == 1:
+            random_power = ['charge','hadoken']
+        elif self.energy >= 2:
+            random_power = ['charge','hadoken','gun']
+        attack = random.choice(random_power)
+        print('enemy',attack)
+        self.release_power(attack) #ส่งคำสั่งปล่อยท่าไปให้บอท
 
-    def release_power(self, attack_command):# เช็คพลังงานและปล่อยพลัง
-        if self.energy > 0:
-            if attack_command == 'hadoken' and self.energy >= 1:
+    def release_power(self, attack_command):# เช็คคำสั่งพลังงานและปล่อยพลัง
+        if self.energy >= 0:
+            if attack_command == 'charge':
+                self.energy += 1
+                self.image_source = './assets/leaf2.png'
+                self.last_power = 'charge'
+            elif attack_command == 'hadoken' and self.energy >= 1:
                 self.energy -= 1
                 self.image_source = './assets/rightplayerattack.png'
                 self.parent.release_attack_power(self.center_x, self.center_y, -1,attack_command) #กำหนดตำแหน่งปล่อยพลังจากตำแหน่งที่ตัวละครยืนอยู่
-                self.lst_power.append('hadoken')
-                
-            if attack_command == 'gun' and self.energy >= 2:
+                self.last_power = 'hadoken'
+            elif attack_command == 'gun' and self.energy >= 2:
                 self.energy -= 2
                 self.image_source = './assets/rightplayerattack.png'
                 self.parent.release_attack_power(self.center_x, self.center_y, -1,attack_command) 
-                self.lst_power.append('gun')
+                self.last_power = 'gun'
                 
 
 class GameWidget(Widget):
@@ -98,6 +113,7 @@ class GameWidget(Widget):
     enemy = ObjectProperty(None)
     attack_powers = []
     stage = StringProperty('prepare') #stage เริ่มต้น
+    
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -107,6 +123,7 @@ class GameWidget(Widget):
     def _on_keyboard_closed(self):
         self._keyboard.unbind(on_key_down=self._on_key_down)
         self._keyboard = None
+    
 
     def _on_key_down(self, keyboard, keycode, text, modifiers):
         if text == 'a':
@@ -118,17 +135,24 @@ class GameWidget(Widget):
                 
         if self.stage == 'prepare':
             if text == 'j':
-                self.player.increase_energy()
-                self.enemy.increase_energy()
+                self.player.release_power('charge')
+                
             elif text == 'k':
                 self.player.release_power('hadoken')#ปล่อยพลังงานA
-                self.enemy.release_power('gun')#ปล่อยพลังงานB
+                
             elif text == 'l':
                 self.player.release_power('gun')#ปล่อยพลังงานA
-                self.enemy.release_power('hadoken')#ปล่อยพลังงานB
+                
+            if self.stage == 'attacking': #ให้ผู้เล่นปล่อยท่าได้ก่อนบอทถึงจะค่อยสุ่มออกท่า
+                    self.enemy.enemy_random_attack()#ปล่อยพลังงานB
+                    self.check_not_attack_both()#เช็คว่าไม่ได้โจมตีทั้งสองฝั่งมั้ย
+        
                 
             
-
+    def check_not_attack_both(self):
+        if self.player.last_power == 'charge' and self.enemy.last_power == 'charge':
+            self.stage = 'attack_finish'
+            
     def release_attack_power(self, x, y, direction, attack_command):
         attack_power = AttackPower()
         attack_power.center = (x, y)
