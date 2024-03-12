@@ -67,7 +67,7 @@ class Player(Widget):
 
 class Enemy(Widget):
     energy = NumericProperty(3)
-    
+    health = NumericProperty(3)
     image_source = StringProperty('./assets/rightplayerprepare.png')
     lst_power = []
     
@@ -193,7 +193,7 @@ class GameWidget(Widget):
             print("Enemy collided with power")
             self.remove_attack_power(power)
             self.stage = 'attack_finish' #เปลี่ยนstage
-            
+            self.enemy.health -= 1
             
         
 
