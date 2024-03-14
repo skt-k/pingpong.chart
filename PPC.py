@@ -4,6 +4,24 @@ from kivy.properties import NumericProperty, ObjectProperty, StringProperty
 from kivy.core.window import Window
 from kivy.clock import Clock
 from kivy.uix.image import Image
+from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.button import Button
+from kivy.uix.label import Label
+from kivy.uix.boxlayout import BoxLayout
+
+class HomePage(Screen):
+    def __init__(self, **kwargs):
+        super(HomePage, self).__init__(**kwargs)
+        layout = BoxLayout(orientation = "vertical", spacing=10, padding=20)
+        self.greeting = Label(text="Welcome", font_size=20, color=(1, 0.6, 0.48))
+        self.startButton = Button(text='Start to Play', on_press=self.go_to_game, font_size=30, size_hint=(None, None), size=(350, 50))
+        
+        layout.add_widget(self.greeting)
+        layout.add_widget(self.startButton)
+        self.add_widget(layout)
+    
+    def go_to_game(self, instance):
+        self.manager.current = 'GameWidget'
 
 
 class AttackPower(Widget):
@@ -93,7 +111,7 @@ class Enemy(Widget):
                 self.lst_power.append('gun')
                 
 
-class GameWidget(Widget):
+class GameWidget(Screen):
     player = ObjectProperty(None)
     enemy = ObjectProperty(None)
     attack_powers = []
@@ -122,7 +140,7 @@ class GameWidget(Widget):
                 self.enemy.increase_energy()
             elif text == 'k':
                 self.player.release_power('hadoken')#ปล่อยพลังงานA
-                self.enemy.release_power('gun')#ปล่อยพลังงานB
+                self.enemy.release_power('hadoken')#ปล่อยพลังงานB
             elif text == 'l':
                 self.player.release_power('gun')#ปล่อยพลังงานA
                 self.enemy.release_power('hadoken')#ปล่อยพลังงานB
@@ -199,7 +217,9 @@ class GameWidget(Widget):
 
 class PpcApp(App):
     def build(self):
-        game = GameWidget()
+        game = ScreenManager()
+        game.add_widget(HomePage(name='HomePage'))
+        game.add_widget(GameWidget(name='GameWidget'))
         return game
 
 if __name__ == '__main__':
