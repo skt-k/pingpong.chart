@@ -24,6 +24,14 @@
             size: self.size 
             source: root.image_source
 
+<HomePage>:
+    canvas.before:
+        Color:
+            rgba: 0.22, 0.8, 1, 0.2
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
 <GameWidget>:
     player : player_left
     enemy : enemy_right 
