@@ -8,6 +8,7 @@
             size: self.size
             source : root.image_source
 <Player>:
+    size_hint:None, None
     size : 150,150
     canvas:
         Rectangle:
@@ -15,6 +16,7 @@
             size: self.size 
             source: root.image_source
 <Enemy>:
+    size_hint:None, None
     size : 150,150
     canvas:
         Rectangle:
@@ -75,33 +77,33 @@
     #กรณีที่มีการอ้างอิงถึงอ็อบเจ็กต์ด้านนอกคลาสปัจจุบัน เช่น <Player> หรือ <Enemy> จะใช้ root เพื่ออ้างอิงถึง GameWidget แทน self 
     Player:
         id: player_left
-        pos: root.width / 4 - 20, root.top / 6
+        pos: root.width / 4 - 20, root.top / 4
 
     Enemy:
         id: enemy_right
-        pos: root.width * 3 / 4 - 20, root.top / 6
+        pos: root.width * 3 / 4 - 20, root.top / 4
     
     Label:
         font_size: 70
-        center_x: root.width / 4
+        center_x: root.width / 10000
         top: root.top / 2
         text: str(root.player.energy)
     Label:
         color: 1, 0, 0, 1
         font_size: 70
-        center_x: root.width / 4
-        top: root.top * 2 / 3 
+        center_x: root.width / 10000
+        top: root.top * 2 / 8
         text: str(root.player.health)
     Label:
         font_size: 70
-        center_x: root.width *3/4
+        center_x: root.width *2.5/8
         top: root.top /2
         text: str(root.enemy.energy)
     Label:
         color: 1, 0, 0, 1
         font_size: 70
-        center_x: root.width *3/4
-        top: root.top * 2 / 3
+        center_x: root.width *2.5/8
+        top: root.top * 2 / 8
         text: str(root.enemy.health)
 
 
