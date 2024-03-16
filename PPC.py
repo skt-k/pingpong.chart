@@ -22,7 +22,7 @@ class HomePage(Screen):
         self.add_widget(layout)
     
     def go_to_game(self, instance):
-        self.manager.current = 'GameWidget'
+        self.manager.current = 'GameScreen'
 
 
 class AttackPower(Widget):
@@ -133,8 +133,15 @@ class Enemy(Widget):
                 self.parent.release_attack_power(self.center_x, self.center_y, -1,attack_command) 
                 self.last_power = 'gun'
                 
+class GameScreen(Screen):
+    def __init__(self, **kwargs):
+        super(GameScreen, self).__init__(**kwargs)
+        self.game_widget = GameWidget()
+        self.add_widget(self.game_widget)
 
-class GameWidget(Screen):
+
+
+class GameWidget(Widget):
     player = ObjectProperty(None)
     enemy = ObjectProperty(None)
     attack_powers = []
@@ -258,7 +265,7 @@ class PpcApp(App):
     def build(self):
         game = ScreenManager()
         game.add_widget(HomePage(name='HomePage'))
-        game.add_widget(GameWidget(name='GameWidget'))
+        game.add_widget(GameScreen(name='GameScreen'))
         return game
 
 if __name__ == '__main__':
