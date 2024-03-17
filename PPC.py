@@ -150,6 +150,13 @@ class Player(Widget):
                 self.last_power = attack_command
                 self.parent.stage = 'attacking' #เปลี่ยนstageเมื่อผู้เล่นปล่อยท่าได้
                 
+            elif attack_command == 'punch' and self.energy >= 4:
+                self.energy -= 4
+                self.image_source = './assets/PlayerS.png'
+                self.parent.release_attack_power(self.center_x, self.center_y, 1,attack_command) #กำหนดตำแหน่งปล่อยพลังจากตำแหน่งที่ตัวละครยืนอยู่
+                self.last_power = attack_command
+                self.parent.stage = 'attacking' #เปลี่ยนstageเมื่อผู้เล่นปล่อยท่าได้
+                
             elif attack_command == 'mirror' and self.energy >= 2:
                 self.energy -= 2
                 self.image_source = './assets/PlayerMirror.png'
@@ -351,6 +358,9 @@ class GameWidget(Widget):
                 elif text == 'h':
                     self.player.release_power('sickle')
                     
+                elif text == 'y':
+                    self.player.release_power('punch')
+                    
                 elif text == 'k':
                     self.player.release_power('mangkudkuan')#ปล่อยพลังงานA
                     
@@ -388,6 +398,8 @@ class GameWidget(Widget):
             attack_power.image_source = './assets/Gun.png'
         elif attack_command == 'sickle':
             attack_power.image_source = './assets/KP.png'
+        elif attack_command == 'punch':
+            attack_power.image_source = './assets/Punch.png'
         self.add_widget(attack_power)
         self.attack_powers.append(attack_power)
         Clock.schedule_interval(attack_power.move, 1 / 120)
