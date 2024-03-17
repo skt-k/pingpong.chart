@@ -219,10 +219,24 @@ class ExplosionPower(Widget):
     
     def _remove_me(self,dt):
         self.parent.remove_widget(self)
+        
 
 class ExplosionPlayer(Widget):
     image_source = StringProperty('./assets/p_explosion.png')
-    sound_source = StringProperty('./assets/punch.wav')
+    sound_source = StringProperty('./assets/toom.wav')
+    def __init__(self,pos):
+        super().__init__()
+        self.pos = pos
+        sound = SoundLoader.load(self.sound_source)
+        sound.play()
+        Clock.schedule_once(self._remove_me,0.3)
+
+    def _remove_me(self,dt):
+        self.parent.remove_widget(self)
+        
+class ExplosionPlayerNotHurt(Widget):
+    image_source = StringProperty('./assets/p_explosion.png')
+    sound_source = StringProperty('./assets/light.wav')
     def __init__(self,pos):
         super().__init__()
         self.pos = pos
@@ -372,7 +386,7 @@ class GameWidget(Widget):
             
     def check_player_collision_not_hurt(self, player, power, power_position):
         if self.collides(player, power):
-            explosion_effect = ExplosionPlayer(power_position)
+            explosion_effect = ExplosionPlayerNotHurt(power_position)
             self.add_widget(explosion_effect)
             print("Player collided with power")
             self.remove_attack_power(power)
