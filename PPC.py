@@ -82,13 +82,13 @@ class AttackPower(Widget):
                             game_widget.check_collision(self, power,'break_both',self.pos) #เช็คว่าตัวมันเองชนกับpowerนี้อยู่มั้ย
                         
                 if power.direction == 1: #ถ้าพลังมาจากplayerเช็คการชนกับenemy
-                    game_widget.check_enemy_collision(game_widget.enemy,power)
+                    game_widget.check_enemy_collision(game_widget.enemy,power,game_widget.enemy.pos)
                     
                 if power.direction == -1: #ถ้าพลังมาจากenemyเช็คการชนกับplayer
                     if game_widget.player.last_power == 'shield': #ถ้าออกท่าป้องกันมาก็เช็คการชนแบบไม่ลดเลือด
-                        game_widget.check_player_collision_not_hurt(game_widget.player,power)
+                        game_widget.check_player_collision_not_hurt(game_widget.player,power,game_widget.player.pos)
                     else:
-                        game_widget.check_player_collision(game_widget.player,power)
+                        game_widget.check_player_collision(game_widget.player,power,game_widget.player.pos)
                     
             
 class Player(Widget):
@@ -183,7 +183,15 @@ class ExplosionPower(Widget):
     def _remove_me(self,dt):
         self.parent.remove_widget(self)
 
+class ExplosionPlayer(Widget):
+    image_source = StringProperty('./assets/p_explosion.png')
+    def __init__(self,pos):
+        super().__init__()
+        self.pos = pos
+        Clock.schedule_once(self._remove_me,0.2)
 
+    def _remove_me(self,dt):
+        self.parent.remove_widget(self)
 
 class GameWidget(Widget):
     player = ObjectProperty(None)
@@ -284,8 +292,10 @@ class GameWidget(Widget):
                 self.remove_attack_power(power_b)
                 self.stage = 'attack_finish' #เปลี่ยนstage
                   
-    def check_player_collision(self, player, power):
+    def check_player_collision(self, player, power, power_position):
         if self.collides(player, power):
+            explosion_effect = ExplosionPlayer(power_position)
+            self.add_widget(explosion_effect)
             print("Player collided with power")
             self.remove_attack_power(power)
             self.stage = 'attack_finish' #เปลี่ยนstage
@@ -293,15 +303,19 @@ class GameWidget(Widget):
             if self.player.health == 0:
                 App.get_running_app().root.current = "LoseScreen"
             
-    def check_player_collision_not_hurt(self, player, power):
+    def check_player_collision_not_hurt(self, player, power, power_position):
         if self.collides(player, power):
+            explosion_effect = ExplosionPlayer(power_position)
+            self.add_widget(explosion_effect)
             print("Player collided with power")
             self.remove_attack_power(power)
             self.stage = 'attack_finish' #เปลี่ยนstage
             
             
-    def check_enemy_collision(self, enemy, power):
+    def check_enemy_collision(self, enemy, power, power_position):
         if self.collides(enemy, power):
+            explosion_effect = ExplosionPlayer(power_position)
+            self.add_widget(explosion_effect)
             print("Enemy collided with power")
             self.remove_attack_power(power)
             self.stage = 'attack_finish' #เปลี่ยนstage
