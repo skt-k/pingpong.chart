@@ -12,8 +12,9 @@ from kivy.core.audio import SoundLoader
 import random
 
 class HomePage(Screen):
-    def __init__(self, **kwargs):
+    def __init__(self, game_widget, **kwargs):
         super(HomePage, self).__init__(**kwargs)
+        self.game_widget = game_widget
         layout = BoxLayout(orientation = "vertical", spacing=10, padding=20)
         self.greeting = Label(text="Welcome", font_size=20, color=(1, 0.6, 0.48))
         self.startButton = Button(text='Start to Play', on_press=self.go_to_game, font_size=30, size_hint=(None, None), size=(350, 50))
@@ -23,7 +24,14 @@ class HomePage(Screen):
         self.add_widget(layout)
     
     def go_to_game(self, instance):
+        self.game_widget.can_play="canclick"
         self.manager.current = 'GameScreen'
+
+class GameScreen(Screen):
+    def __init__(self, game_widget, **kwargs):
+        super(GameScreen, self).__init__(**kwargs)
+        self.game_widget = game_widget
+        self.add_widget(self.game_widget)
 
 class WinScreen(Screen):
     def __init__(self, **kwargs):
@@ -197,11 +205,7 @@ class Enemy(Widget):
             self.health_widgets.append(health_obj)
             self.healthPosition += 110
 
-class GameScreen(Screen):
-    def __init__(self, **kwargs):
-        super(GameScreen, self).__init__(**kwargs)
-        self.game_widget = GameWidget()
-        self.add_widget(self.game_widget)
+
 
 class ExplosionPower(Widget):
     image_source = StringProperty('./assets/explosion.png')
@@ -234,7 +238,7 @@ class GameWidget(Widget):
     enemy = ObjectProperty(None)
     attack_powers = []
     stage = StringProperty('prepare') #stage เริ่มต้น
-    
+    can_play = StringProperty('cannotclick') 
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -252,30 +256,31 @@ class GameWidget(Widget):
     
 
     def _on_key_down(self, keyboard, keycode, text, modifiers):
-        if text == 'a':
-            if self.stage == 'attack_finish': #ต้อง attackfinish ก่อนถึงจะกด a เพื่อเปลี่ยน stage ได้
-                self.player.prepare_attack()
-                self.enemy.prepare_attack()
-                print('stage change to prepare')
-                self.stage = 'prepare' #เปลี่ยนstage
-                
-        if self.stage == 'prepare':
-            if text == 'j':
-                self.player.release_power('charge')
-                
-            elif text == 'i':
-                self.player.release_power('shield')
-                
-            elif text == 'k':
-                self.player.release_power('hadoken')#ปล่อยพลังงานA
-                
-            elif text == 'l':
-                self.player.release_power('gun')#ปล่อยพลังงานA
-                
-            if self.stage == 'attacking': #ให้ผู้เล่นปล่อยท่าได้ก่อนบอทถึงจะค่อยสุ่มออกท่า
-                    self.enemy.enemy_random_attack()#ปล่อยพลังงานB
-                    self.check_not_attack_both()#เช็คว่าไม่ได้โจมตีทั้งสองฝั่งมั้ย
-        
+        if self.can_play == 'canclick':
+            if text == 'a':
+                if self.stage == 'attack_finish': #ต้อง attackfinish ก่อนถึงจะกด a เพื่อเปลี่ยน stage ได้
+                    self.player.prepare_attack()
+                    self.enemy.prepare_attack()
+                    print('stage change to prepare')
+                    self.stage = 'prepare' #เปลี่ยนstage
+                    
+            if self.stage == 'prepare':
+                if text == 'j':
+                    self.player.release_power('charge')
+                    
+                elif text == 'i':
+                    self.player.release_power('shield')
+                    
+                elif text == 'k':
+                    self.player.release_power('hadoken')#ปล่อยพลังงานA
+                    
+                elif text == 'l':
+                    self.player.release_power('gun')#ปล่อยพลังงานA
+                    
+                if self.stage == 'attacking': #ให้ผู้เล่นปล่อยท่าได้ก่อนบอทถึงจะค่อยสุ่มออกท่า
+                        self.enemy.enemy_random_attack()#ปล่อยพลังงานB
+                        self.check_not_attack_both()#เช็คว่าไม่ได้โจมตีทั้งสองฝั่งมั้ย
+            
                 
     def check_not_attack_both(self):#เช็คว่าไม่ปล่อยพลังทั้งสองฝ่ายมั้ย
         if self.player.last_power == 'charge' and self.enemy.last_power == 'charge':
@@ -370,11 +375,17 @@ class GameWidget(Widget):
 
 class PpcApp(App):
     def build(self):
+        game_widget = GameWidget()
         game = ScreenManager()
-        game.add_widget(HomePage(name='HomePage'))
-        game.add_widget(GameScreen(name='GameScreen'))
-        game.add_widget(WinScreen(name='WinScreen'))
-        game.add_widget(LoseScreen(name='LoseScreen'))
+        home_page = HomePage(name='HomePage',game_widget=game_widget)
+        game_screen = GameScreen(name='GameScreen',game_widget=game_widget)
+        win_screen = WinScreen(name='WinScreen')
+        lose_screen = LoseScreen(name='LoseScreen')
+
+        game.add_widget(home_page)
+        game.add_widget(game_screen)
+        game.add_widget(win_screen)
+        game.add_widget(lose_screen)
         return game
 
 if __name__ == '__main__':
