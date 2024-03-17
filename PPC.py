@@ -82,9 +82,9 @@ class AttackPower(Widget):
                     player_last_attack = game_widget.player.last_power
                     enemy_last_attack = game_widget.enemy.last_power
                     if self.direction == 1 and power.direction == -1:
-                        if player_last_attack == 'hadoken' and enemy_last_attack == 'gun': 
+                        if player_last_attack == 'hadoken' and enemy_last_attack == 'pong': 
                             game_widget.check_collision(self, power,'break_power_player', self.pos) #เช็คว่าตัวมันเองชนกับpowerนี้อยู่มั้ย
-                        elif player_last_attack == 'gun' and enemy_last_attack == 'hadoken': 
+                        elif player_last_attack == 'pong' and enemy_last_attack == 'hadoken': 
                             game_widget.check_collision(self, power,'break_power_enemy', self.pos) #เช็คว่าตัวมันเองชนกับpowerนี้อยู่มั้ย
                     
                         else: 
@@ -141,7 +141,7 @@ class Player(Widget):
                 self.parent.release_attack_power(self.center_x, self.center_y, 1,attack_command) #กำหนดตำแหน่งปล่อยพลังจากตำแหน่งที่ตัวละครยืนอยู่
                 self.last_power = attack_command
                 self.parent.stage = 'attacking' #เปลี่ยนstageเมื่อผู้เล่นปล่อยท่าได้
-            elif attack_command == 'gun' and self.energy >= 2:
+            elif attack_command == 'pong' and self.energy >= 2:
                 self.energy -= 2
                 self.image_source = './assets/leftplayerattack.png'
                 self.parent.release_attack_power(self.center_x, self.center_y, 1,attack_command) 
@@ -178,7 +178,7 @@ class Enemy(Widget):
         elif self.energy == 1:
             random_power = ['charge','hadoken']
         elif self.energy >= 2:
-            random_power = ['charge','hadoken','gun']
+            random_power = ['charge','hadoken','pong']
         attack = random.choice(random_power)
         print('enemy_random',attack)
         self.release_power(attack) #ส่งคำสั่งปล่อยท่าไปให้บอท
@@ -200,11 +200,11 @@ class Enemy(Widget):
                 self.image_source = './assets/rightplayerattack.png'
                 self.parent.release_attack_power(self.center_x, self.center_y, -1,attack_command) #กำหนดตำแหน่งปล่อยพลังจากตำแหน่งที่ตัวละครยืนอยู่
                 self.last_power = 'hadoken'
-            elif attack_command == 'gun' and self.energy >= 2:
+            elif attack_command == 'pong' and self.energy >= 2:
                 self.energy -= 2
                 self.image_source = './assets/rightplayerattack.png'
                 self.parent.release_attack_power(self.center_x, self.center_y, -1,attack_command) 
-                self.last_power = 'gun'
+                self.last_power = 'pong'
     def update_health_widgets(self):
         for widget in self.health_widgets:
             self.parent.remove_widget(widget)
@@ -324,7 +324,11 @@ class GameWidget(Widget):
                     self.player.release_power('hadoken')#ปล่อยพลังงานA
                     
                 elif text == 'l':
-                    self.player.release_power('gun')#ปล่อยพลังงานA
+                    self.player.release_power('pong')#ปล่อยพลังงานA
+
+                    
+                elif text == 'l':
+                    self.player.release_power('pong')#ปล่อยพลังงานA
                     
                 if self.stage == 'attacking': #ให้ผู้เล่นปล่อยท่าได้ก่อนบอทถึงจะค่อยสุ่มออกท่า
                         self.enemy.enemy_random_attack()#ปล่อยพลังงานB
@@ -342,8 +346,8 @@ class GameWidget(Widget):
         attack_power.direction = direction
         if attack_command == 'hadoken':
             attack_power.image_source = './assets/power.png'
-        elif attack_command == 'gun':
-            attack_power.image_source = './assets/gun.png'
+        elif attack_command == 'pong':
+            attack_power.image_source = './assets/Pong.png'
         self.add_widget(attack_power)
         self.attack_powers.append(attack_power)
         Clock.schedule_interval(attack_power.move, 1 / 120)
