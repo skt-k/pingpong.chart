@@ -51,6 +51,10 @@
 
 <HomePage>:
     canvas.before:
+        Rectangle:
+            source: './assets/backgroundhome.png'
+            pos: self.pos
+            size: self.size
         Color:
             rgba: 0.22, 0.8, 1, 0.2
         Rectangle:
@@ -94,6 +98,10 @@
 
 
          #เอาไว้ใส่เป็นรูปบอกท่ากับพลังงานที่ใช้
+        Rectangle:
+            source: './assets/prepare.png'
+            pos: self.width / 2 - 660, self.top / 22
+            size:100,100 
         Rectangle:
             source: './assets/1.png'
             pos: self.width / 2 - 550, self.top / 22
