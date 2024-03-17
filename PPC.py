@@ -68,7 +68,7 @@ class LoseScreen(Screen):
         self.manager.current = "HomePage"
 
 class AttackPower(Widget):
-    image_source = StringProperty('./assets/power.png')
+    image_source = StringProperty('')
     velocity = NumericProperty(10)
     direction = NumericProperty(1)  # 1 for right, -1 for left    
             
@@ -123,9 +123,15 @@ class Player(Widget):
                 self.image_source = './assets/PlayerCharge.png'
                 self.last_power = 'charge'
                 self.parent.stage = 'attacking' #เปลี่ยนstageเมื่อผู้เล่นปล่อยท่าได้
-                
+
+            elif attack_command == 'supercharge' and self.energy >= 3:
+                self.energy += 2
+                self.image_source = './assets/PlayerSuperCharge.png'
+                self.last_power = 'supercharge'
+                self.parent.stage = 'attacking'
+
             elif attack_command == 'shield':
-                self.image_source = './assets/shield.png'
+                self.image_source = './assets/Shield.png'
                 self.last_power = 'shield'
                 self.parent.stage = 'attacking' #เปลี่ยนstageเมื่อผู้เล่นปล่อยท่าได้
                 
@@ -183,6 +189,12 @@ class Enemy(Widget):
                 self.energy += 1
                 self.image_source = './assets/EnemyCharge.png'
                 self.last_power = 'charge'
+
+            elif attack_command == 'supercharge' and self.energy >= 3:
+                self.energy += 2
+                self.image_source = './assets/EnemySuperCharge.png'
+                self.last_power = 'supercharge'
+                
             elif attack_command == 'hadoken' and self.energy >= 1:
                 self.energy -= 1
                 self.image_source = './assets/rightplayerattack.png'
@@ -253,6 +265,7 @@ class GameWidget(Widget):
     attack_powers = []
     stage = StringProperty('prepare') #stage เริ่มต้น
     can_play = StringProperty('cannotclick') 
+    not_attack = ListProperty(['charge','supercharge','shield'])
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -301,6 +314,9 @@ class GameWidget(Widget):
                 if text == 'j':
                     self.player.release_power('charge')
                     
+                elif text == 'u':
+                    self.player.release_power('supercharge')
+
                 elif text == 'i':
                     self.player.release_power('shield')
                     
@@ -316,10 +332,9 @@ class GameWidget(Widget):
             
                 
     def check_not_attack_both(self):#เช็คว่าไม่ปล่อยพลังทั้งสองฝ่ายมั้ย
-        if self.player.last_power == 'charge' and self.enemy.last_power == 'charge':
+        if self.player.last_power in self.not_attack and self.enemy.last_power in self.not_attack:
             self.stage = 'attack_finish'
-        elif self.player.last_power == 'shield' and self.enemy.last_power == 'charge':
-            self.stage = 'attack_finish'
+        
         
     def release_attack_power(self, x, y, direction, attack_command):
         attack_power = AttackPower()
