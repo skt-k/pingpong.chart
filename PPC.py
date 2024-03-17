@@ -277,7 +277,7 @@ class Enemy(Widget):
                 self.last_power = 'supercharge'
                 
             elif attack_command == 'shield':
-                self.image_source = './assets/PlayerShield.png'
+                self.image_source = './assets/EnemyShield.png'
                 self.last_power = 'shield'
                 
             elif attack_command == 'ghost':
@@ -485,11 +485,11 @@ class GameWidget(Widget):
         elif attack_command == 'pong':
             attack_power.image_source = './assets/Pong.png'
         elif attack_command == 'gun':
-            attack_power.image_source = './assets/Gun.png'
+            attack_power.image_source = './assets/KEffect.png'
         elif attack_command == 'sickle':
-            attack_power.image_source = './assets/KP.png'
+            attack_power.image_source = './assets/K2.png'
         elif attack_command == 'punch':
-            attack_power.image_source = './assets/Punch.png'
+            attack_power.image_source = './assets/Punch2.png'
         self.add_widget(attack_power)
         self.attack_powers.append(attack_power)
         Clock.schedule_interval(attack_power.move, 1 / 120)
