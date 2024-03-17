@@ -146,7 +146,7 @@ class Health(Widget):
         super().__init__()                  
             
 class Player(Widget):
-    energy = NumericProperty(100)
+    energy = NumericProperty(3)
     health = NumericProperty(5)
     image_source = StringProperty('./assets/PPP.png')
     last_power = StringProperty('')
@@ -235,7 +235,7 @@ class Player(Widget):
             self.healthPosition += 110
 
 class Enemy(Widget):
-    energy = NumericProperty(100)
+    energy = NumericProperty(3)
     health = NumericProperty(5)
     image_source = StringProperty('./assets/EPP.png')
     last_power = StringProperty('')
@@ -400,11 +400,11 @@ class GameWidget(Widget):
         self.can_play = "cannotclick"
         self.stage = "prepare"
         self.player.image_source = './assets/PPP.png'
-        self.player.energy = 100
+        self.player.energy = 3
         self.player.health = 5
 
         self.enemy.image_source = "./assets/EPP.png"
-        self.enemy.energy = 100
+        self.enemy.energy = 3
         self.enemy.health = 5
 
         self.player.last_power = ''
