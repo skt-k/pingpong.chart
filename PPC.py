@@ -24,6 +24,24 @@ class HomePage(Screen):
     def go_to_game(self, instance):
         self.manager.current = 'GameScreen'
 
+class WinScreen(Screen):
+    def __init__(self, **kwargs):
+        super(WinScreen,self).__init__(**kwargs)
+
+        layout=BoxLayout(orientation="vertical",spacing=10,padding=200)
+
+        message_label = Label(text="Congratulations! Yon Win!", font_size=30, color=(0,1,0))
+        back_button = Button(text="Back to Home", on_press=self.go_to_home, font_size=20)
+
+        layout.add_widget(message_label)
+        layout.add_widget(back_button)
+
+        self.add_widget(layout)
+
+    def go_to_home(self,instance):
+        self.manager.current="HomePage"
+
+
 
 class AttackPower(Widget):
     image_source = StringProperty('./assets/power.png')
@@ -258,7 +276,9 @@ class GameWidget(Widget):
             self.remove_attack_power(power)
             self.stage = 'attack_finish' #เปลี่ยนstage
             self.enemy.health -= 1
-            
+            if self.enemy.health == 0:
+                App.get_running_app().root.current = "WinScreen"
+
         
 
 class PpcApp(App):
@@ -266,6 +286,8 @@ class PpcApp(App):
         game = ScreenManager()
         game.add_widget(HomePage(name='HomePage'))
         game.add_widget(GameScreen(name='GameScreen'))
+        game.add_widget(WinScreen(name='WinScreen'))
+
         return game
 
 if __name__ == '__main__':
