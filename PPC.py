@@ -82,22 +82,61 @@ class AttackPower(Widget):
                     player_last_attack = game_widget.player.last_power
                     enemy_last_attack = game_widget.enemy.last_power
                     if self.direction == 1 and power.direction == -1:
-                        if player_last_attack == 'mangkudkuan' and enemy_last_attack == 'pong': 
+                        if player_last_attack == 'mangkudkuan' and enemy_last_attack == 'sickle': 
                             game_widget.check_collision(self, power,'break_power_player', self.pos) #เช็คว่าตัวมันเองชนกับpowerนี้อยู่มั้ย
-                        elif player_last_attack == 'pong' and enemy_last_attack == 'mangkudkuan': 
-                            game_widget.check_collision(self, power,'break_power_enemy', self.pos) #เช็คว่าตัวมันเองชนกับpowerนี้อยู่มั้ย
-                    
+                        elif player_last_attack == 'sickle' and enemy_last_attack == 'mangkudkuan': 
+                            game_widget.check_collision(self, power,'break_power_enemy', power.pos) #เช็คว่าตัวมันเองชนกับpowerนี้อยู่มั้ย
                         else: 
                             game_widget.check_collision(self, power,'break_both',self.pos) #เช็คว่าตัวมันเองชนกับpowerนี้อยู่มั้ย
                         
                 if power.direction == 1: #ถ้าพลังมาจากplayerเช็คการชนกับenemy
-                    game_widget.check_enemy_collision(game_widget.enemy,power,game_widget.enemy.pos)
+                    if game_widget.enemy.last_power == 'shield': #ถ้าออกท่าป้องกันมาก็เช็คการชนแบบไม่ลดเลือด
+                        if game_widget.player.last_power == 'pong':
+                            game_widget.check_enemy_collision(game_widget.enemy,power, game_widget.enemy.pos)
+                        elif game_widget.player.last_power == 'sickle':
+                            game_widget.check_enemy_collision(game_widget.enemy,power, game_widget.enemy.pos)
+                        else:
+                            game_widget.check_enemy_collision_not_hurt(game_widget.enemy,power, game_widget.enemy.pos)
+                    elif game_widget.enemy.last_power == 'ghost':
+                        if game_widget.player.last_power == 'gun':
+                            game_widget.check_enemy_collision(game_widget.enemy,power, game_widget.enemy.pos)
+                        elif game_widget.player.last_power == 'sickle':
+                            game_widget.check_enemy_collision(game_widget.enemy,power, game_widget.enemy.pos)
+                        else:
+                            game_widget.check_enemy_collision_not_hurt(game_widget.enemy,power, game_widget.enemy.pos)
+                    elif game_widget.enemy.last_power == 'mirror':
+                        if game_widget.player.last_power == 'mangkudkuan':
+                            game_widget.check_player_collision(game_widget.enemy,power, game_widget.player.pos)
+                        elif game_widget.player.last_power == 'punch':
+                            game_widget.check_enemy_collision(game_widget.enemy,power, game_widget.enemy.pos)
+                        else:
+                            game_widget.check_enemy_collision_not_hurt(game_widget.enemy,power, game_widget.enemy.pos)
+                    else:
+                        game_widget.check_enemy_collision(game_widget.enemy,power, game_widget.enemy.pos)
+                    
                     
                 if power.direction == -1: #ถ้าพลังมาจากenemyเช็คการชนกับplayer
                     if game_widget.player.last_power == 'shield': #ถ้าออกท่าป้องกันมาก็เช็คการชนแบบไม่ลดเลือด
-                        game_widget.check_player_collision_not_hurt(game_widget.player,power,game_widget.player.pos)
+                        if game_widget.enemy.last_power == 'pong':
+                            game_widget.check_player_collision(game_widget.player,power,game_widget.player.pos)
+                        elif game_widget.enemy.last_power == 'sickle':
+                            game_widget.check_player_collision(game_widget.player,power,game_widget.player.pos)
+                        else:
+                            game_widget.check_player_collision_not_hurt(game_widget.player,power,game_widget.player.pos)
                     elif game_widget.player.last_power == 'ghost':
-                        game_widget.check_player_collision_not_hurt(game_widget.player,power,game_widget.player.pos)
+                        if game_widget.enemy.last_power == 'gun':
+                            game_widget.check_player_collision(game_widget.player,power,game_widget.player.pos)
+                        elif game_widget.enemy.last_power == 'sickle':
+                            game_widget.check_player_collision(game_widget.player,power,game_widget.player.pos)
+                        else:
+                            game_widget.check_player_collision_not_hurt(game_widget.player,power,game_widget.player.pos)
+                    elif game_widget.player.last_power == 'mirror':
+                        if game_widget.enemy.last_power == 'mangkudkuan':
+                            game_widget.check_enemy_collision(game_widget.player,power, game_widget.enemy.pos)
+                        elif game_widget.enemy.last_power == 'punch':
+                            game_widget.check_player_collision(game_widget.player,power,game_widget.player.pos)
+                        else:
+                            game_widget.check_player_collision_not_hurt(game_widget.player,power,game_widget.player.pos)
                     else:
                         game_widget.check_player_collision(game_widget.player,power,game_widget.player.pos)
                     
@@ -209,11 +248,18 @@ class Enemy(Widget):
         
     def enemy_random_attack(self): #บอทสุ่มท่า
         if self.energy == 0:
-            random_power = ['charge']
-        elif self.energy == 1:
-            random_power = ['charge','mangkudkuan']
-        elif self.energy >= 2:
-            random_power = ['charge','mangkudkuan','pong']
+            random_power = ['charge','shield','ghost']
+        elif self.energy <= 1:
+            random_power = ['charge','shield','ghost','mangkudkuan']
+        elif self.energy <= 2:
+            random_power = ['charge','shield','ghost','mangkudkuan','mirror']
+        elif self.energy <= 3:
+            random_power = ['charge','supercharge','shield','ghost','mangkudkuan','mirror','pong','gun']
+        elif self.energy <= 4:
+            random_power = ['charge','supercharge','shield','ghost','mangkudkuan','mirror','pong','gun','punch']
+        elif self.energy >= 5:
+            random_power = ['charge','supercharge','shield','ghost','mangkudkuan','mirror','pong','gun','punch','sickle']
+
         attack = random.choice(random_power)
         print('enemy_random',attack)
         self.release_power(attack) #ส่งคำสั่งปล่อยท่าไปให้บอท
@@ -230,16 +276,50 @@ class Enemy(Widget):
                 self.image_source = './assets/EnemySuperCharge.png'
                 self.last_power = 'supercharge'
                 
+            elif attack_command == 'shield':
+                self.image_source = './assets/PlayerShield.png'
+                self.last_power = 'shield'
+                
+            elif attack_command == 'ghost':
+                self.image_source = './assets/Ghost.png'
+                self.last_power = 'ghost'
+                
             elif attack_command == 'mangkudkuan' and self.energy >= 1:
                 self.energy -= 1
-                self.image_source = './assets/rightplayerattack.png'
+                self.image_source = './assets/Enemys.png'
                 self.parent.release_attack_power(self.center_x, self.center_y, -1,attack_command) #กำหนดตำแหน่งปล่อยพลังจากตำแหน่งที่ตัวละครยืนอยู่
                 self.last_power = 'mangkudkuan'
-            elif attack_command == 'pong' and self.energy >= 2:
+            
+            elif attack_command == 'mirror' and self.energy >= 2:
                 self.energy -= 2
-                self.image_source = './assets/rightplayerattack.png'
+                self.image_source = './assets/EnemyMirror.png'
+                self.last_power = 'mirror'
+                
+            elif attack_command == 'pong' and self.energy >= 3:
+                self.energy -= 3
+                self.image_source = './assets/Enemys.png'
                 self.parent.release_attack_power(self.center_x, self.center_y, -1,attack_command) 
-                self.last_power = 'pong'
+                self.last_power = attack_command
+        
+            elif attack_command == 'gun' and self.energy >= 3:
+                self.energy -= 3
+                self.image_source = './assets/Enemys.png'
+                self.parent.release_attack_power(self.center_x, self.center_y, -1,attack_command) 
+                self.last_power = attack_command
+                
+            elif attack_command == 'punch' and self.energy >= 4:
+                self.energy -= 4
+                self.image_source = './assets/Enemys.png'
+                self.parent.release_attack_power(self.center_x, self.center_y, -1,attack_command) #กำหนดตำแหน่งปล่อยพลังจากตำแหน่งที่ตัวละครยืนอยู่
+                self.last_power = attack_command
+                
+            elif attack_command == 'sickle' and self.energy >= 5:
+                self.energy -= 5
+                self.image_source = './assets/UF.png'
+                self.parent.release_attack_power(self.center_x, self.center_y, -1,attack_command) #กำหนดตำแหน่งปล่อยพลังจากตำแหน่งที่ตัวละครยืนอยู่
+                self.last_power = attack_command
+                
+            
     def update_health_widgets(self):
         for widget in self.health_widgets:
             self.parent.remove_widget(widget)
@@ -382,7 +462,13 @@ class GameWidget(Widget):
             
                 
     def check_not_attack_both(self):#เช็คว่าไม่ปล่อยพลังทั้งสองฝ่ายมั้ย
-        if self.player.last_power in self.not_attack and self.enemy.last_power in self.not_attack:
+        if self.player.last_power =='supercharge' and self.enemy.last_power =='mirror':
+            self.player.energy = 0
+            self.stage = 'attack_finish'
+        elif self.player.last_power == 'mirror' and self.enemy.last_power == 'supercharge':
+            self.enemy.energy = 0
+            self.stage = 'attack_finish'
+        elif self.player.last_power in self.not_attack and self.enemy.last_power in self.not_attack:
             self.stage = 'attack_finish'
         
         
@@ -443,6 +529,7 @@ class GameWidget(Widget):
                 self.stage = 'attack_finish' #เปลี่ยนstage
                   
     def check_player_collision(self, player, power, power_position):
+        
         if self.collides(player, power):
             explosion_effect = ExplosionPlayer(power_position)
             self.add_widget(explosion_effect)
@@ -456,6 +543,7 @@ class GameWidget(Widget):
                 App.get_running_app().root.current = "LoseScreen"
             
     def check_player_collision_not_hurt(self, player, power, power_position):
+        
         if self.collides(player, power):
             explosion_effect = ExplosionPlayerNotHurt(power_position)
             self.add_widget(explosion_effect)
@@ -476,7 +564,14 @@ class GameWidget(Widget):
             if self.enemy.health == 0:
                 self.reset_game()
                 App.get_running_app().root.current = "WinScreen"
-
+                
+    def check_enemy_collision_not_hurt(self, enemy, power, power_position):
+        if self.collides(enemy, power):
+            explosion_effect = ExplosionPlayerNotHurt(power_position)
+            self.add_widget(explosion_effect)
+            print("Enemy collided with power")
+            self.remove_attack_power(power)
+            self.stage = 'attack_finish' #เปลี่ยนstage
       
 
 class PpcApp(App):
