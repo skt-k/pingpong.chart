@@ -96,8 +96,11 @@ class AttackPower(Widget):
                 if power.direction == -1: #ถ้าพลังมาจากenemyเช็คการชนกับplayer
                     if game_widget.player.last_power == 'shield': #ถ้าออกท่าป้องกันมาก็เช็คการชนแบบไม่ลดเลือด
                         game_widget.check_player_collision_not_hurt(game_widget.player,power,game_widget.player.pos)
+                    elif game_widget.player.last_power == 'ghost':
+                        game_widget.check_player_collision_not_hurt(game_widget.player,power,game_widget.player.pos)
                     else:
                         game_widget.check_player_collision(game_widget.player,power,game_widget.player.pos)
+                    
 
 class Health(Widget):
     def __init__(self):
@@ -131,8 +134,13 @@ class Player(Widget):
                 self.parent.stage = 'attacking'
 
             elif attack_command == 'shield':
-                self.image_source = './assets/Shield.png'
+                self.image_source = './assets/PlayerShield.png'
                 self.last_power = 'shield'
+                self.parent.stage = 'attacking' #เปลี่ยนstageเมื่อผู้เล่นปล่อยท่าได้
+                
+            elif attack_command == 'ghost':
+                self.image_source = './assets/Ghost.png'
+                self.last_power = 'ghost'
                 self.parent.stage = 'attacking' #เปลี่ยนstageเมื่อผู้เล่นปล่อยท่าได้
                 
             elif attack_command == 'hadoken' and self.energy >= 1:
@@ -143,7 +151,7 @@ class Player(Widget):
                 self.parent.stage = 'attacking' #เปลี่ยนstageเมื่อผู้เล่นปล่อยท่าได้
             elif attack_command == 'pong' and self.energy >= 2:
                 self.energy -= 2
-                self.image_source = './assets/leftplayerattack.png'
+                self.image_source = './assets/PlayerS.png'
                 self.parent.release_attack_power(self.center_x, self.center_y, 1,attack_command) 
                 self.last_power = attack_command
                 self.parent.stage = 'attacking' #เปลี่ยนstageเมื่อผู้เล่นปล่อยท่าได้
@@ -265,7 +273,7 @@ class GameWidget(Widget):
     attack_powers = []
     stage = StringProperty('prepare') #stage เริ่มต้น
     can_play = StringProperty('cannotclick') 
-    not_attack = ListProperty(['charge','supercharge','shield'])
+    not_attack = ListProperty(['charge','supercharge','shield','ghost'])
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -325,10 +333,9 @@ class GameWidget(Widget):
                     
                 elif text == 'l':
                     self.player.release_power('pong')#ปล่อยพลังงานA
-
                     
-                elif text == 'l':
-                    self.player.release_power('pong')#ปล่อยพลังงานA
+                elif text == 'o':
+                    self.player.release_power('ghost')
                     
                 if self.stage == 'attacking': #ให้ผู้เล่นปล่อยท่าได้ก่อนบอทถึงจะค่อยสุ่มออกท่า
                         self.enemy.enemy_random_attack()#ปล่อยพลังงานB
