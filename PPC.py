@@ -107,6 +107,8 @@ class AttackPower(Widget):
                     elif game_widget.enemy.last_power == 'mirror':
                         if game_widget.player.last_power == 'mangkudkuan':
                             game_widget.check_player_collision(game_widget.enemy,power, game_widget.player.pos)
+                        elif game_widget.player.last_power == 'punch':
+                            game_widget.check_enemy_collision(game_widget.enemy,power, game_widget.enemy.pos)
                         else:
                             game_widget.check_enemy_collision_not_hurt(game_widget.enemy,power, game_widget.enemy.pos)
                     else:
@@ -131,6 +133,8 @@ class AttackPower(Widget):
                     elif game_widget.player.last_power == 'mirror':
                         if game_widget.enemy.last_power == 'mangkudkuan':
                             game_widget.check_enemy_collision(game_widget.player,power, game_widget.enemy.pos)
+                        elif game_widget.enemy.last_power == 'punch':
+                            game_widget.check_player_collision(game_widget.player,power,game_widget.player.pos)
                         else:
                             game_widget.check_player_collision_not_hurt(game_widget.player,power,game_widget.player.pos)
                     else:
