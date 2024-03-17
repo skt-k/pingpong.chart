@@ -250,6 +250,25 @@ class GameWidget(Widget):
         self.player.update_health_widgets()
         self.enemy.update_health_widgets()
 
+    def reset_game(self):
+        self.can_play = "cannotclick"
+        self.stage = "prepare"
+        self.player.image_source = './assets/PPP.png'
+        self.player.energy = 100
+        self.player.health = 5
+
+        self.enemy.image_source = "./assets/EPP.png"
+        self.enemy.energy = 100
+        self.enemy.health = 5
+
+        self.player.last_power = ''
+        self.enemy.last_power = ''
+
+        self.player.update_health_widgets()
+        self.enemy.update_health_widgets()
+
+        self.attack_powers = []
+
     def _on_keyboard_closed(self):
         self._keyboard.unbind(on_key_down=self._on_key_down)
         self._keyboard = None
@@ -348,6 +367,7 @@ class GameWidget(Widget):
             self.player.health -= 1
             self.show_health()
             if self.player.health == 0:
+                self.reset_game()
                 App.get_running_app().root.current = "LoseScreen"
             
     def check_player_collision_not_hurt(self, player, power, power_position):
@@ -369,6 +389,7 @@ class GameWidget(Widget):
             self.enemy.health -= 1
             self.show_health()
             if self.enemy.health == 0:
+                self.reset_game()
                 App.get_running_app().root.current = "WinScreen"
 
       
