@@ -61,7 +61,7 @@ class LoseScreen(Screen):
 
 class AttackPower(Widget):
     image_source = StringProperty('./assets/power.png')
-    velocity = NumericProperty(5)
+    velocity = NumericProperty(10)
     direction = NumericProperty(1)  # 1 for right, -1 for left    
             
     def move(self, dt):  # Add dt as an argument
@@ -182,7 +182,7 @@ class ExplosionPower(Widget):
         self.pos = pos
         sound = SoundLoader.load(self.sound_source)
         sound.play()
-        Clock.schedule_once(self._remove_me, 0.5)
+        Clock.schedule_once(self._remove_me, 0.3)
     
     def _remove_me(self,dt):
         self.parent.remove_widget(self)
@@ -195,7 +195,7 @@ class ExplosionPlayer(Widget):
         self.pos = pos
         sound = SoundLoader.load(self.sound_source)
         sound.play()
-        Clock.schedule_once(self._remove_me,0.5)
+        Clock.schedule_once(self._remove_me,0.3)
 
     def _remove_me(self,dt):
         self.parent.remove_widget(self)
@@ -259,7 +259,7 @@ class GameWidget(Widget):
             attack_power.image_source = './assets/gun.png'
         self.add_widget(attack_power)
         self.attack_powers.append(attack_power)
-        Clock.schedule_interval(attack_power.move, 1 / 60)
+        Clock.schedule_interval(attack_power.move, 1 / 120)
     
         
     def remove_attack_power(self, attack_power):
