@@ -387,6 +387,10 @@ class GameWidget(Widget):
         self._keyboard = Window.request_keyboard(self._on_keyboard_closed, self)
         self._keyboard.bind(on_key_down=self._on_key_down)
         self.show_health()
+        
+        sound = SoundLoader.load('./assets/BGM.mp3')
+        sound.volume = 0.2
+        sound.play()
 
     def show_health(self):
         self.player.update_health_widgets()
