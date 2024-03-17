@@ -277,7 +277,7 @@ class Enemy(Widget):
                 self.last_power = 'supercharge'
                 
             elif attack_command == 'shield':
-                self.image_source = './assets/PlayerShield.png'
+                self.image_source = './assets/EnemyShield.png'
                 self.last_power = 'shield'
                 
             elif attack_command == 'ghost':
