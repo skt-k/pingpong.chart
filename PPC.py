@@ -72,7 +72,7 @@ class Player(Widget):
         if self.energy >= 0:  
             if attack_command == 'charge':
                 self.energy += 1
-                self.image_source = './assets/leaf.png'
+                self.image_source = './assets/PlayerCharge.png'
                 self.last_power = 'charge'
                 self.parent.stage = 'attacking' #เปลี่ยนstageเมื่อผู้เล่นปล่อยท่าได้
                 
@@ -120,7 +120,7 @@ class Enemy(Widget):
         if self.energy >= 0:
             if attack_command == 'charge':
                 self.energy += 1
-                self.image_source = './assets/leaf2.png'
+                self.image_source = './assets/EnemyCharge.png'
                 self.last_power = 'charge'
             elif attack_command == 'hadoken' and self.energy >= 1:
                 self.energy -= 1
