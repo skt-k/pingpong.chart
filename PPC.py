@@ -254,11 +254,11 @@ class Enemy(Widget):
         elif self.energy <= 2:
             random_power = ['charge','shield','ghost','mangkudkuan','mirror']
         elif self.energy <= 3:
-            random_power = ['charge','shield','ghost','mangkudkuan','mirror','pong','gun']
+            random_power = ['charge','supercharge','shield','ghost','mangkudkuan','mirror','pong','gun']
         elif self.energy <= 4:
-            random_power = ['charge','shield','ghost','mangkudkuan','mirror','pong','gun','punch']
+            random_power = ['charge','supercharge','shield','ghost','mangkudkuan','mirror','pong','gun','punch']
         elif self.energy >= 5:
-            random_power = ['charge','shield','ghost','mangkudkuan','mirror','pong','gun','punch','sickle']
+            random_power = ['charge','supercharge','shield','ghost','mangkudkuan','mirror','pong','gun','punch','sickle']
 
         attack = random.choice(random_power)
         print('enemy_random',attack)
@@ -462,7 +462,13 @@ class GameWidget(Widget):
             
                 
     def check_not_attack_both(self):#เช็คว่าไม่ปล่อยพลังทั้งสองฝ่ายมั้ย
-        if self.player.last_power in self.not_attack and self.enemy.last_power in self.not_attack:
+        if self.player.last_power =='supercharge' and self.enemy.last_power =='mirror':
+            self.player.energy = 0
+            self.stage = 'attack_finish'
+        elif self.player.last_power == 'mirror' and self.enemy.last_power == 'supercharge':
+            self.enemy.energy = 0
+            self.stage = 'attack_finish'
+        elif self.player.last_power in self.not_attack and self.enemy.last_power in self.not_attack:
             self.stage = 'attack_finish'
         
         
