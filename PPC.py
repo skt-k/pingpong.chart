@@ -90,13 +90,18 @@ class AttackPower(Widget):
                         game_widget.check_player_collision_not_hurt(game_widget.player,power,game_widget.player.pos)
                     else:
                         game_widget.check_player_collision(game_widget.player,power,game_widget.player.pos)
-                    
+
+class Health(Widget):
+    def __init__(self):
+        super().__init__()                  
             
 class Player(Widget):
     energy = NumericProperty(100)
     health = NumericProperty(5)
     image_source = StringProperty('./assets/PPP.png')
     last_power = StringProperty('')
+    healthPosition = NumericProperty(110)
+    health_widgets = ListProperty([])
     # game_widget = self.parent
     
     def prepare_attack(self):
@@ -129,12 +134,25 @@ class Player(Widget):
                 self.last_power = attack_command
                 self.parent.stage = 'attacking' #เปลี่ยนstageเมื่อผู้เล่นปล่อยท่าได้
         
+    def update_health_widgets(self):
+        for widget in self.health_widgets:
+            self.parent.remove_widget(widget)
+        self.health_widgets = []
+        self.healthPosition = 110
+        for i in range(self.health):
+            health_obj = Health()
+            health_obj.center =(200 + self.healthPosition, 600)
+            self.parent.add_widget(health_obj)
+            self.health_widgets.append(health_obj)
+            self.healthPosition += 110
+
 class Enemy(Widget):
     energy = NumericProperty(100)
     health = NumericProperty(5)
     image_source = StringProperty('./assets/EPP.png')
     last_power = StringProperty('')
-    
+    healthPosition = NumericProperty(110)
+    health_widgets = ListProperty([])
     
     def prepare_attack(self):
         self.image_source = './assets/EPP.png'
@@ -167,7 +185,18 @@ class Enemy(Widget):
                 self.image_source = './assets/rightplayerattack.png'
                 self.parent.release_attack_power(self.center_x, self.center_y, -1,attack_command) 
                 self.last_power = 'gun'
-                
+    def update_health_widgets(self):
+        for widget in self.health_widgets:
+            self.parent.remove_widget(widget)
+        self.health_widgets = []
+        self.healthPosition = 110
+        for i in range(self.health):
+            health_obj = Health()
+            health_obj.center = (1110 + self.healthPosition, 600)
+            self.parent.add_widget(health_obj)
+            self.health_widgets.append(health_obj)
+            self.healthPosition += 110
+
 class GameScreen(Screen):
     def __init__(self, **kwargs):
         super(GameScreen, self).__init__(**kwargs)
@@ -211,6 +240,11 @@ class GameWidget(Widget):
         super().__init__(**kwargs)
         self._keyboard = Window.request_keyboard(self._on_keyboard_closed, self)
         self._keyboard.bind(on_key_down=self._on_key_down)
+        self.show_health()
+
+    def show_health(self):
+        self.player.update_health_widgets()
+        self.enemy.update_health_widgets()
 
     def _on_keyboard_closed(self):
         self._keyboard.unbind(on_key_down=self._on_key_down)
@@ -307,6 +341,7 @@ class GameWidget(Widget):
             self.remove_attack_power(power)
             self.stage = 'attack_finish' #เปลี่ยนstage
             self.player.health -= 1
+            self.show_health()
             if self.player.health == 0:
                 App.get_running_app().root.current = "LoseScreen"
             
@@ -327,6 +362,7 @@ class GameWidget(Widget):
             self.remove_attack_power(power)
             self.stage = 'attack_finish' #เปลี่ยนstage
             self.enemy.health -= 1
+            self.show_health()
             if self.enemy.health == 0:
                 App.get_running_app().root.current = "WinScreen"
 
