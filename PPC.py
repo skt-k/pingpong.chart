@@ -8,6 +8,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivy.uix.boxlayout import BoxLayout
+from kivy.core.audio import SoundLoader
 import random
 
 class HomePage(Screen):
@@ -175,20 +176,26 @@ class GameScreen(Screen):
 
 class ExplosionPower(Widget):
     image_source = StringProperty('./assets/explosion.png')
+    sound_source = StringProperty('./assets/punch.wav')
     def __init__(self,pos):
         super().__init__()
         self.pos = pos
-        Clock.schedule_once(self._remove_me, 0.2)
+        sound = SoundLoader.load(self.sound_source)
+        sound.play()
+        Clock.schedule_once(self._remove_me, 0.5)
     
     def _remove_me(self,dt):
         self.parent.remove_widget(self)
 
 class ExplosionPlayer(Widget):
     image_source = StringProperty('./assets/p_explosion.png')
+    sound_source = StringProperty('./assets/punch.wav')
     def __init__(self,pos):
         super().__init__()
         self.pos = pos
-        Clock.schedule_once(self._remove_me,0.2)
+        sound = SoundLoader.load(self.sound_source)
+        sound.play()
+        Clock.schedule_once(self._remove_me,0.5)
 
     def _remove_me(self,dt):
         self.parent.remove_widget(self)
