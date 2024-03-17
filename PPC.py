@@ -72,13 +72,14 @@ class AttackPower(Widget):
                 if power != self : #ถ้าpower ไม่ใช่ตัวมันเอง
                     player_last_attack = game_widget.player.last_power
                     enemy_last_attack = game_widget.enemy.last_power
-                    if player_last_attack == 'hadoken' and enemy_last_attack == 'gun': 
-                        game_widget.check_collision(self, power,'break_power_player') #เช็คว่าตัวมันเองชนกับpowerนี้อยู่มั้ย
-                    elif player_last_attack == 'gun' and enemy_last_attack == 'hadoken': 
-                        game_widget.check_collision(self, power,'break_power_enemy') #เช็คว่าตัวมันเองชนกับpowerนี้อยู่มั้ย
+                    if self.direction == 1 and power.direction == -1:
+                        if player_last_attack == 'hadoken' and enemy_last_attack == 'gun': 
+                            game_widget.check_collision(self, power,'break_power_player', self.pos) #เช็คว่าตัวมันเองชนกับpowerนี้อยู่มั้ย
+                        elif player_last_attack == 'gun' and enemy_last_attack == 'hadoken': 
+                            game_widget.check_collision(self, power,'break_power_enemy', self.pos) #เช็คว่าตัวมันเองชนกับpowerนี้อยู่มั้ย
                     
-                    else: 
-                        game_widget.check_collision(self, power,'break_both') #เช็คว่าตัวมันเองชนกับpowerนี้อยู่มั้ย
+                        else: 
+                            game_widget.check_collision(self, power,'break_both',self.pos) #เช็คว่าตัวมันเองชนกับpowerนี้อยู่มั้ย
                         
                 if power.direction == 1: #ถ้าพลังมาจากplayerเช็คการชนกับenemy
                     game_widget.check_enemy_collision(game_widget.enemy,power)
@@ -91,8 +92,8 @@ class AttackPower(Widget):
                     
             
 class Player(Widget):
-    energy = NumericProperty(3)
-    health = NumericProperty(3)
+    energy = NumericProperty(100)
+    health = NumericProperty(5)
     image_source = StringProperty('./assets/PPP.png')
     last_power = StringProperty('')
     # game_widget = self.parent
@@ -128,8 +129,8 @@ class Player(Widget):
                 self.parent.stage = 'attacking' #เปลี่ยนstageเมื่อผู้เล่นปล่อยท่าได้
         
 class Enemy(Widget):
-    energy = NumericProperty(3)
-    health = NumericProperty(3)
+    energy = NumericProperty(100)
+    health = NumericProperty(5)
     image_source = StringProperty('./assets/EPP.png')
     last_power = StringProperty('')
     
@@ -171,6 +172,16 @@ class GameScreen(Screen):
         super(GameScreen, self).__init__(**kwargs)
         self.game_widget = GameWidget()
         self.add_widget(self.game_widget)
+
+class ExplosionPower(Widget):
+    image_source = StringProperty('./assets/explosion.png')
+    def __init__(self,pos):
+        super().__init__()
+        self.pos = pos
+        Clock.schedule_once(self._remove_me, 0.2)
+    
+    def _remove_me(self,dt):
+        self.parent.remove_widget(self)
 
 
 
@@ -259,9 +270,11 @@ class GameWidget(Widget):
         else:
             return False
     
-    def check_collision(self, power_a, power_b, command):
+    def check_collision(self, power_a, power_b, command, power_position):
         if self.collides(power_a, power_b): #ใช้ฟังชันตรวจสอบการชนกับวัตถุสองอย่าง
             print("Collision detected between power A and power B")
+            explosion_effect = ExplosionPower(power_position)
+            self.add_widget(explosion_effect)
             if command == 'break_power_player':
                 self.remove_attack_power(power_a)
             elif command == 'break_power_enemy':
@@ -296,7 +309,7 @@ class GameWidget(Widget):
             if self.enemy.health == 0:
                 App.get_running_app().root.current = "WinScreen"
 
-        
+      
 
 class PpcApp(App):
     def build(self):
