@@ -41,7 +41,22 @@ class WinScreen(Screen):
     def go_to_home(self,instance):
         self.manager.current="HomePage"
 
+class LoseScreen(Screen):
+    def __init__(self, **kwargs):
+        super(LoseScreen,self).__init__(**kwargs)
 
+        layout=BoxLayout(orientation="vertical",spacing=10,padding=200)
+
+        message_label = Label(text="Game Over! You Lose!", font_size=30, color=(1,0,0))
+        back_button = Button(text="Back to Home", on_press=self.go_to_home, font_size=20)
+
+        layout.add_widget(message_label)
+        layout.add_widget(back_button)
+
+        self.add_widget(layout)
+
+    def go_to_home(self,instance):
+        self.manager.current = "HomePage"
 
 class AttackPower(Widget):
     image_source = StringProperty('./assets/power.png')
@@ -262,6 +277,8 @@ class GameWidget(Widget):
             self.remove_attack_power(power)
             self.stage = 'attack_finish' #เปลี่ยนstage
             self.player.health -= 1
+            if self.player.health == 0:
+                App.get_running_app().root.current = "LoseScreen"
             
     def check_player_collision_not_hurt(self, player, power):
         if self.collides(player, power):
@@ -287,7 +304,7 @@ class PpcApp(App):
         game.add_widget(HomePage(name='HomePage'))
         game.add_widget(GameScreen(name='GameScreen'))
         game.add_widget(WinScreen(name='WinScreen'))
-
+        game.add_widget(LoseScreen(name='LoseScreen'))
         return game
 
 if __name__ == '__main__':
