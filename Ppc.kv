@@ -79,7 +79,7 @@
     
     canvas:
         Rectangle:
-            source: './assets/background.jpg'
+            source: './assets/background2.png'
             pos: self.pos
             size: self.size
 
@@ -137,8 +137,9 @@
             
 
     Label:
+        color: 0, 0, 1, 1
         text: root.stage  
-        font_size: 30
+        font_size: 50
         center: self.parent.center 
          
     #กรณีที่มีการอ้างอิงถึงอ็อบเจ็กต์ด้านนอกคลาสปัจจุบัน เช่น <Player> หรือ <Enemy> จะใช้ root เพื่ออ้างอิงถึง GameWidget แทน self 
@@ -148,15 +149,17 @@
 
     Enemy:
         id: enemy_right
-        pos: root.width * 3 / 4, root.top / 4
+        pos: root.width * 3 / 4 - 100, root.top / 4
     
     Label:
+        color: 0.6, 0.4, 0.8, 1  
         font_size: 70
         center_x: root.width / 4 + 30
         top: root.top / 2 + 40
         text: str(root.player.energy)
    
     Label:
+        color: 0.6, 0.4, 0.8, 1  
         font_size: 70
         center_x: root.width *3 /4
         top: root.top /2 + 40
