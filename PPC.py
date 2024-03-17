@@ -60,12 +60,12 @@ class AttackPower(Widget):
 class Player(Widget):
     energy = NumericProperty(3)
     health = NumericProperty(3)
-    image_source = StringProperty('./assets/leftplayerprepare.png')
+    image_source = StringProperty('./assets/PPP.png')
     last_power = StringProperty('')
     # game_widget = self.parent
     
     def prepare_attack(self):
-        self.image_source = './assets/leftplayerprepare.png'
+        self.image_source = './assets/PPP.png'
         
 
     def release_power(self, attack_command):# เช็คพลังงานและปล่อยพลัง
@@ -97,12 +97,12 @@ class Player(Widget):
 class Enemy(Widget):
     energy = NumericProperty(3)
     health = NumericProperty(3)
-    image_source = StringProperty('./assets/rightplayerprepare.png')
+    image_source = StringProperty('./assets/EPP.png')
     last_power = StringProperty('')
     
     
     def prepare_attack(self):
-        self.image_source = './assets/rightplayerprepare.png'
+        self.image_source = './assets/EPP.png'
     
         
     def enemy_random_attack(self): #บอทสุ่มท่า
