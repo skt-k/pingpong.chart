@@ -9,7 +9,7 @@
             size:self.size
 
 <AttackPower>:
-    size: 100,100
+    size: 130,130
     canvas:
         Rectangle:
             pos: self.pos
@@ -34,7 +34,7 @@
             
 <Player>:
     size_hint:None, None
-    size : 150,150
+    size : 200,200
     canvas:
         Rectangle:
             pos: self.pos
@@ -42,7 +42,7 @@
             source: root.image_source
 <Enemy>:
     size_hint:None, None
-    size : 150,150
+    size : 200,200
     canvas:
         Rectangle:
             pos: self.pos
@@ -85,11 +85,11 @@
 
         Rectangle:
             source:'./assets/energy.png'
-            pos: self.width / 4 + 60,self.top / 2 -100
+            pos: self.width / 4 + 90,self.top / 2 -60
             size: 100,100
         Rectangle:
             source:'./assets/energy.png'
-            pos: root.width *3 /4 + 60,self.top / 2 -100
+            pos: root.width *3 /4 + 60,self.top / 2 - 60
             size: 100,100
 
 
@@ -144,21 +144,21 @@
     #กรณีที่มีการอ้างอิงถึงอ็อบเจ็กต์ด้านนอกคลาสปัจจุบัน เช่น <Player> หรือ <Enemy> จะใช้ root เพื่ออ้างอิงถึง GameWidget แทน self 
     Player:
         id: player_left
-        pos: root.width *2/7, root.top / 4
+        pos: root.width / 4, root.top / 4
 
     Enemy:
         id: enemy_right
-        pos: root.width * 2 / 3, root.top / 4
+        pos: root.width * 3 / 4, root.top / 4
     
     Label:
         font_size: 70
-        center_x: root.width / 4
-        top: root.top / 2
+        center_x: root.width / 4 + 30
+        top: root.top / 2 + 40
         text: str(root.player.energy)
    
     Label:
         font_size: 70
         center_x: root.width *3 /4
-        top: root.top /2
+        top: root.top /2 + 40
         text: str(root.enemy.energy)
    
