@@ -15,9 +15,9 @@ class HomePage(Screen):
     def __init__(self, game_widget, **kwargs):
         super(HomePage, self).__init__(**kwargs)
         self.game_widget = game_widget
-        layout = BoxLayout(orientation = "vertical", spacing=10, padding=20)
-        self.greeting = Label(text="Welcome", font_size=20, color=(1, 0.6, 0.48))
-        self.startButton = Button(text='Start to Play', on_press=self.go_to_game, font_size=30, size_hint=(None, None), size=(350, 50))
+        layout = BoxLayout(orientation = "vertical", spacing=10, padding=200)
+        self.greeting = Label(text="Ping Pong Charge", font_size=50, color=(1, 0.6, 0.48))
+        self.startButton = Button(text='Start to Play', on_press=self.go_to_game, font_size=30)
         
         layout.add_widget(self.greeting)
         layout.add_widget(self.startButton)

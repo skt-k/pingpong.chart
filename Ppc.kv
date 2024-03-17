@@ -6,7 +6,7 @@
         Rectangle:
             pos:self.pos
             size:self.size
-            
+
 <AttackPower>:
     size: 100,100
     canvas:
@@ -49,6 +49,22 @@
             source: root.image_source
 
 <HomePage>:
+    canvas.before:
+        Color:
+            rgba: 0.22, 0.8, 1, 0.2
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+<WinScreen>:
+    canvas.before:
+        Color:
+            rgba: 0.22, 0.8, 1, 0.2
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+<LoseScreen>:
     canvas.before:
         Color:
             rgba: 0.22, 0.8, 1, 0.2
@@ -135,21 +151,10 @@
         center_x: root.width / 4
         top: root.top / 2
         text: str(root.player.energy)
-    Label:
-        color: 1, 0, 0, 1
-        font_size: 70
-        center_x: root.width / 4
-        top: root.top * 2 / 3
-        text: str(root.player.health)
+   
     Label:
         font_size: 70
         center_x: root.width *3 /4
         top: root.top /2
         text: str(root.enemy.energy)
-    Label:
-        color: 1, 0, 0, 1
-        font_size: 70
-        center_x: root.width *3/4
-        top: root.top * 2 / 3
-        text: str(root.enemy.health)
-
+   
