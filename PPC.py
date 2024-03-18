@@ -40,7 +40,7 @@ class WinScreen(Screen):
         layout=BoxLayout(orientation="vertical",spacing=10,padding=200)
 
         message_label = Label(text="Congratulations! Yon Win!", font_size=80, color=(0,1,0))
-        back_button = Button(text="Back to Home", on_press=self.go_to_home, font_size=50,background_color=(1,1,1,0))
+        back_button = Button(text="> Back to Home <", on_press=self.go_to_home, font_size=50,background_color=(1,1,1,0))
 
         layout.add_widget(message_label)
         layout.add_widget(back_button)
@@ -57,7 +57,7 @@ class LoseScreen(Screen):
         layout=BoxLayout(orientation="vertical",spacing=10,padding=200)
 
         message_label = Label(text="Game Over! You Lose!", font_size=80, color=(1,0,0))
-        back_button = Button(text="Back to Home", on_press=self.go_to_home, font_size=50,background_color=(1,1,1,0))
+        back_button = Button(text="> Back to Home <", on_press=self.go_to_home, font_size=50,background_color=(1,1,1,0))
 
         layout.add_widget(message_label)
         layout.add_widget(back_button)
