@@ -389,7 +389,7 @@ class GameWidget(Widget):
         self.show_health()
         
         sound = SoundLoader.load('./assets/BGM.mp3')
-        sound.volume = 0.2
+        sound.volume = 0.3
         sound.play()
 
     def show_health(self):
@@ -490,6 +490,9 @@ class GameWidget(Widget):
             attack_power.image_source = './assets/K2.png'
         elif attack_command == 'punch':
             attack_power.image_source = './assets/Punch2.png'
+        
+        if direction == -1:  # เช็คหากทิศทางเป็น -1
+            attack_power.flip_horizontal = True  # กลับด้านรูปภาพ
         self.add_widget(attack_power)
         self.attack_powers.append(attack_power)
         Clock.schedule_interval(attack_power.move, 1 / 120)
