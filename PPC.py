@@ -389,7 +389,7 @@ class GameWidget(Widget):
         self.show_health()
         
         sound = SoundLoader.load('./assets/BGM.mp3')
-        sound.volume = 0.2
+        sound.volume = 0.3
         sound.loop = True
         sound.play()
 
@@ -485,12 +485,16 @@ class GameWidget(Widget):
             attack_power.image_source = './assets/KH.png'
         elif attack_command == 'pong':
             attack_power.image_source = './assets/Pong.png'
-        elif attack_command == 'gun':
-            attack_power.image_source = './assets/KEffect.png'
+        elif attack_command == 'gun' and direction == 1:
+            attack_power.image_source = './assets/gunL.png'
+        elif attack_command == 'gun' and direction == -1:
+            attack_power.image_source = './assets/gunR.png'
         elif attack_command == 'sickle':
             attack_power.image_source = './assets/K2.png'
         elif attack_command == 'punch':
             attack_power.image_source = './assets/Punch2.png'
+        
+        
         self.add_widget(attack_power)
         self.attack_powers.append(attack_power)
         Clock.schedule_interval(attack_power.move, 1 / 120)
