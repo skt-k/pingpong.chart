@@ -17,7 +17,7 @@ class HomePage(Screen):
         self.game_widget = game_widget
         layout = BoxLayout(orientation = "vertical", spacing=10, padding=200)
         self.greeting = Label(text="Ping Pong Charge", font_size=50, color=(1, 0.6, 0.48))
-        self.startButton = Button(text='Start to Play', on_press=self.go_to_game, font_size=30)
+        self.startButton = Button(text='Start to Play', on_press=self.go_to_game, font_size=50, background_color=(1,1,1,0), color=(0, 0, 0, 1))
         
         layout.add_widget(self.greeting)
         layout.add_widget(self.startButton)
@@ -40,7 +40,7 @@ class WinScreen(Screen):
         layout=BoxLayout(orientation="vertical",spacing=10,padding=200)
 
         message_label = Label(text="Congratulations! Yon Win!", font_size=30, color=(0,1,0))
-        back_button = Button(text="Back to Home", on_press=self.go_to_home, font_size=20)
+        back_button = Button(text="Back to Home", on_press=self.go_to_home, font_size=20,background_color=(1,1,1,0))
 
         layout.add_widget(message_label)
         layout.add_widget(back_button)
@@ -57,7 +57,7 @@ class LoseScreen(Screen):
         layout=BoxLayout(orientation="vertical",spacing=10,padding=200)
 
         message_label = Label(text="Game Over! You Lose!", font_size=30, color=(1,0,0))
-        back_button = Button(text="Back to Home", on_press=self.go_to_home, font_size=20)
+        back_button = Button(text="Back to Home", on_press=self.go_to_home, font_size=20,background_color=(1,1,1,0))
 
         layout.add_widget(message_label)
         layout.add_widget(back_button)
