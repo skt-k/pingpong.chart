@@ -362,8 +362,8 @@ class ExplosionPlayer(Widget):
         self.parent.remove_widget(self)
         
 class ExplosionPlayerNotHurt(Widget):
-    image_source = StringProperty('./assets/p_explosion.png')
-    sound_source = StringProperty('./assets/light.wav')
+    image_source = StringProperty('./assets/explosion_defend.png')
+    sound_source = StringProperty('./assets/defend.mp3')
     def __init__(self,pos):
         super().__init__()
         self.pos = pos
