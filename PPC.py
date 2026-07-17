@@ -226,13 +226,15 @@ class Player(Widget):
         for widget in self.health_widgets:
             self.parent.remove_widget(widget)
         self.health_widgets = []
-        self.healthPosition = 110
+        spacing = Window.width * 0.04
+        center_x = Window.width * 0.22
+        start_x = center_x - ((self.health - 1) * spacing / 2)
+        y_pos = Window.height * 0.65
         for i in range(self.health):
             health_obj = Health()
-            health_obj.center =(200 + self.healthPosition, 600)
+            health_obj.center = (start_x + i * spacing, y_pos)
             self.parent.add_widget(health_obj)
             self.health_widgets.append(health_obj)
-            self.healthPosition += 110
 
 class Enemy(Widget):
     energy = NumericProperty(3)
@@ -324,13 +326,15 @@ class Enemy(Widget):
         for widget in self.health_widgets:
             self.parent.remove_widget(widget)
         self.health_widgets = []
-        self.healthPosition = 110
+        spacing = Window.width * 0.04
+        center_x = Window.width * 0.78
+        start_x = center_x - ((self.health - 1) * spacing / 2)
+        y_pos = Window.height * 0.65
         for i in range(self.health):
             health_obj = Health()
-            health_obj.center = (1110 + self.healthPosition, 600)
+            health_obj.center = (start_x + i * spacing, y_pos)
             self.parent.add_widget(health_obj)
             self.health_widgets.append(health_obj)
-            self.healthPosition += 110
 
 
 
@@ -396,6 +400,10 @@ class GameWidget(Widget):
     def show_health(self):
         self.player.update_health_widgets()
         self.enemy.update_health_widgets()
+
+    def on_size(self, *args):
+        if self.player and self.enemy:
+            self.show_health()
 
     def reset_game(self):
         self.can_play = "cannotclick"
