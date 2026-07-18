@@ -1,52 +1,60 @@
-# Pingpong Chart 
-#### This is a game created using Kivy.
-## Features
-### Pingpong Chart
-เป็นเกมแนวต่อสู้ ตัวละครหลักจะมี 2 ฝ่าย
-- แมวเหมียวฝั่งซ้าย (ผู้เล่น)
-- แมวเหมียวฝั่งขวา (คู่ต่อสู้)
-การเล่นเกมจะเล่นต่อสู้กับแมวฝั่งขวา ซึ่งจะสุ่มท่าออกมาต่อสู้กับผู้เล่น
-โดยผู้เล่นสามารถเลือกท่าที่ต้องการต่อสู้ได้ โดยมีทั้งหมด 11 ท่า
-    - a : prepare กดทุกครั้งหลัง attack 
-    - j : charge : point +1 --> จะแพ้ท่าทุกท่าที่เป็นท่าโจมตี
-    - u : super charge : point +2 | point >= 3 --> ถ้าเจอกับกระจกจะโดนทำให้พลังงานเหลือ 0
-    - o : หายตัว : 0 point --> จะแพ้แค่ gun กับ sickle
-    - i : ป้องกัน : 0 point -->  จะแพ้แค่ pong กับ sickle
-    - ; : สะท้อนกลับ : -2 point --> จะชนะ มังคุดข่วน
-    - k : มังคุดข่วน : 1 point --> จะแพ้ sickle
-    - l : ป๋องเหมียว : -3 point --> จะชนะ ป้องกัน
-    - p : ปิ้ว : -3 point --> จะชนะ หายตัว 
-    - y : หมัดเหมียว : -4 point --> จะชนะ กระจก 
-    - h : เคียว : -5 point --> จะชนะ มังคุดข่วน, ป้องกัน, หายตัว
-- โดยผู้เล่นและคู่ต่อสู้จะมีแแต้มหัวใจฝั่งลละ 5 แต้ม หากโดนโจมตีจนหัวใจหมด จะถือว่าแพ้ในเกมนั้น <br> และมีค่า energy ฝั่งละ 5 หน่วย จะโดนหัก,เพิ่มเมื่อกดเลือกท่า ซึ่งจะมีบอกไว้ด้านล่างว่าท่าไหนหัก point , +point เท่าไหร่บ้าง
-## Dependencies
- Kivy: Kivy Official Site > https://kivy.org/doc/stable/
+# 🎮 Pingpong Chart (Kivy 2D Battle Game)
 
-##### 610110333 นางสาวสุขิตา เหลียวพัฒนพงศ์ <br> 6610110661 นายสรรพิภพ บัตริยะ
-##### การทำงานแต่ละคลาส
-class HomePage(Screen): 
-แสดงหน้าHome และ ปุ่มกดเข้าเกมส์ 
-class GameScreen(Screen): 
-    หน้าสำหรับแสดงตัวเกมส์จาก GameWidget
-class WinScreen(Screen): 
-    หน้าที่แสดงผลตอนชนะ
-class LoseScreen(Screen): 
-    หน้าที่แสดงผลตอนชนะ
-class AttackPower(Widget): 
-    คลาสเอาไว้ให้ player กับ Enemy ปล่อยพลังออกมา และเช็คว่าจะตรวจจับการชนอย่างไร ท่าไหนชนะท่าไหน
-class Health(Widget):
-    คลาสเอาไว้แสดงก้อนหัวใจแต่ละก้อน
-class Player(Widget):
-    คลาสสำหรับให้Playerสั่งคำสั่งปล่อยท่า และเก็บเลือดPlayer เก็บพลังงานPlayer เก็บท่าสุดท้ายที่Playerปล่อย เก็บระยะห่างของหัวใจแต่ละก้อน และทำการสั่งแสดงผลหัวใจขึ้นมาบนหัวเพลเยอร์
-class Enemy(Widget):
-    คลาสสำหรับให้Enemyสั่งคำสั่งปล่อยท่า และเก็บเลือดEnemy เก็บพลังงานEnemy เก็บท่าสุดท้ายที่Enemyปล่อย เก็บระยะห่างของหัวใจแต่ละก้อน และ ทำการสั่งแสดงผลหัวใจขึ้นมาบนหัวEnemy
-class ExplosionPower(Widget):
-    คลาสแสดงรูปและเสียงตอนพลังชนกัน
-class ExplosionPlayer(Widget):
-    คลาสแสดงรูปและเสียงตอนพลังงานชนPlayer หรือ Enemy
-class ExplosionPlayerNotHurt(Widget):
-    คลาสแสดงรูปและเสียงตอนพลังงานชนPlayer หรือ Enemy แล้วป้องกันไว้ได้
-class GameWidget(Widget):
-    แสดงผลองค์ประกอบต่างๆในเกมส์
-class PpcApp(App):
-    หน้าแอพ
+![Python](https://img.shields.io/badge/Python-3.12+-blue.svg)
+![Kivy](https://img.shields.io/badge/Kivy-2.3.1-green.svg)
+![Architecture](https://img.shields.io/badge/Architecture-OOP-orange.svg)
+
+**Pingpong Chart** is a 2D tactical, turn-based battle game developed entirely in Python using the **Kivy framework**. 
+
+This project was built to demonstrate a deep understanding of **Object-Oriented Programming (OOP)**, **Event-Driven Architecture**, and **GUI/UI development**. Players manage resources (Health and Energy) and strategically choose from 11 different abilities to defeat an opponent.
+
+
+
+## 🏗️ Architecture & Core Components
+
+- **`GameWidget`**: The main orchestrator. Manages the core game loop, tracks scores, and handles global game states.
+- **`Player` & `Enemy`**: Stateful entities that track health, energy, and current attack actions.
+- **`AttackPower`**: Handles projectile movement, hitboxes, and complex collision resolution (calculating which attack overpowers another based on the game's matrix).
+- **`ExplosionPower` / `Health`**: Modular UI components for visual feedback and resource tracking.
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+Make sure you have Python 3 installed. It is highly recommended to use a virtual environment (`venv`).
+
+### Installation
+1. Clone this repository.
+2. Install the required dependencies:
+   ```bash
+   pip install kivy
+   ```
+   *(Note: If you are using Python 3.12+, you might need to install the pre-release version: `pip install --pre kivy kivy[base]`)*
+
+### Running the Game
+Run the main Python script to start the game window:
+```bash
+python PPC.py
+```
+
+---
+
+## ⚔️ Gameplay Mechanics & Rules
+
+The game is a 1v1 battle against an AI opponent. Both sides start with **5 Health** and **3 Energy**. Actions cost or generate Energy.
+
+### Controls & Abilities Matrix
+| Key | Action | Energy Cost | Mechanics / Counters |
+| :---: | :--- | :---: | :--- |
+| **A** | Prepare | - | Resets stance after an attack. |
+| **J** | Charge | +1 | Gains energy, but highly vulnerable to any incoming attack. |
+| **U** | Super Charge | +2 (Needs 3) | Huge energy gain, but instantly loses all energy if countered by Mirror (`;`). |
+| **O** | Invisibility | 0 | Evades most attacks. Only loses to Gun (`P`) and Sickle (`H`). |
+| **I** | Defend | 0 | Blocks standard attacks. Loses to Canned Cat (`L`) and Sickle (`H`). |
+| **;** | Mirror/Reflect | -2 | Reflects damage. Wins against Scratch (`K`). |
+| **K** | Scratch | -1 | Basic attack. Loses to Sickle (`H`). |
+| **L** | Canned Cat | -3 | Pierces defenses. Wins against Defend (`I`). |
+| **P** | Gun | -3 | Ranged attack. Wins against Invisibility (`O`). |
+| **Y** | Cat Punch | -4 | Heavy attack. Destroys Mirror/Reflect (`;`). |
+
